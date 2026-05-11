@@ -1,0 +1,8 @@
+{
+  "name": "job-tracker-monorepo",
+  "private": true,
+  "workspaces": [
+    "workers/*",
+    "packages/*"
+  ]
+}
