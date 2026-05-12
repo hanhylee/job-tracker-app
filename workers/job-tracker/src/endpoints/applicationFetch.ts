@@ -1,24 +1,24 @@
 import { NotFoundException, OpenAPIRoute } from "chanfana";
 import { z } from "zod";
-import { type AppContext, Task } from "../types";
+import { type AppContext, Application } from "../types";
 
-export class TaskFetch extends OpenAPIRoute {
+export class ApplicationFetch extends OpenAPIRoute {
 	schema = {
-		tags: ["Tasks"],
-		summary: "Get a single Task by slug",
+		tags: ["Applications"],
+		summary: "Get a single application by slug",
 		request: {
 			params: z.object({
-				taskSlug: z.string().describe("Task slug"),
+				applicationSlug: z.string().describe("Application slug"),
 			}),
 		},
 		responses: {
 			"200": {
-				description: "Returns a single task if found",
+				description: "Returns a single application if found",
 				content: {
 					"application/json": {
 						schema: z.object({
 							success: z.boolean(),
-							task: Task,
+							Application: Application,
 						}),
 					},
 				},
@@ -31,7 +31,7 @@ export class TaskFetch extends OpenAPIRoute {
 		const data = await this.getValidatedData<typeof this.schema>();
 
 		// Retrieve the validated slug
-		const { taskSlug } = data.params;
+		const { applicationSlug } = data.params;
 
 		// Implement your own object fetch here
 
@@ -43,9 +43,9 @@ export class TaskFetch extends OpenAPIRoute {
 
 		return {
 			success: true,
-			task: {
-				name: "my task",
-				slug: taskSlug,
+			application: {
+				name: "my application",
+				slug: applicationSlug,
 				description: "this needs to be done",
 				completed: false,
 				due_date: new Date().toISOString().slice(0, 10),

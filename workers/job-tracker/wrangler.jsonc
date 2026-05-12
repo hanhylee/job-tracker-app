@@ -21,13 +21,6 @@
 			"database_id": "336f22e2-a1ff-4eb1-82bf-cdc9fe36c965",
 			"remote": true
 		}
-	],
-	"secrets_store_secrets": [  
-	{  
-		"store_id": "ce77c2974e834abead64e59c16b236cb",  
-		"binding": "SECRET",  
-		"secret_name": "job-tracker-db"
-	}  
 	]
 	/**
 	 * Smart Placement

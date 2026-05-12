@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export type AppContext = Context<{ Bindings: Env }>;
 
-export const Task = z.object({
+export const Application = z.object({
 	name: z.string().openapi({ example: "lorem" }),
 	slug: z.string(),
 	description: z.string().optional(),

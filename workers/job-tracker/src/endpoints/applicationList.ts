@@ -1,11 +1,11 @@
 import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
-import { type AppContext, Task } from "../types";
+import { type AppContext, Application } from "../types";
 
-export class TaskList extends OpenAPIRoute {
+export class ApplicationList extends OpenAPIRoute {
 	schema = {
-		tags: ["Tasks"],
-		summary: "List Tasks",
+		tags: ["Applications"],
+		summary: "List applications",
 		request: {
 			query: z.object({
 				page: z.number().default(0).describe("Page number"),
@@ -17,12 +17,12 @@ export class TaskList extends OpenAPIRoute {
 		},
 		responses: {
 			"200": {
-				description: "Returns a list of tasks",
+				description: "Returns a list of applications",
 				content: {
 					"application/json": {
 						schema: z.object({
 							success: z.boolean(),
-							tasks: Task.array(),
+							applications: Application.array(),
 						}),
 					},
 				},
@@ -41,7 +41,7 @@ export class TaskList extends OpenAPIRoute {
 
 		return {
 			success: true,
-			tasks: [
+			applications: [
 				{
 					name: "Clean my room",
 					slug: "clean-room",
