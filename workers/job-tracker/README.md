@@ -24,7 +24,31 @@ Set in `.dev.vars`:
 
 ```env
 BETTER_AUTH_URL=http://localhost:8787
+FRONTEND_URL=http://localhost:5173
 ```
+
+## Frontend (Vercel)
+
+The web app lives in `frontend/` at the repo root. See [`frontend/README.md`](../../frontend/README.md).
+
+Production:
+
+```env
+BETTER_AUTH_URL=https://api.cancareer.com
+FRONTEND_URL=https://cancareer.com,https://www.cancareer.com
+```
+
+CORS and Better Auth `trustedOrigins` use `FRONTEND_URL`. Cross-site cookies (`SameSite=None`) apply when `BETTER_AUTH_URL` is HTTPS.
+
+### Applications API
+
+| Method | Path | Auth |
+|--------|------|------|
+| `GET` | `/api/applications` | Session cookie |
+| `POST` | `/api/applications` | Session cookie |
+| `GET` | `/api/applications/:id` | Session cookie |
+| `PATCH` | `/api/applications/:id` | Session cookie |
+| `DELETE` | `/api/applications/:id` | Session cookie |
 
 ## Sign in (magic link)
 
@@ -86,7 +110,7 @@ Invoke-RestMethod -Uri "http://localhost:8787/api/auth/get-session" -Headers @{
 npm run test:api
 ```
 
-Runs: health check → list → create → get by id → delete.
+Runs: health check → list → create → get by id → patch → delete.
 
 | Error | Fix |
 |-------|-----|

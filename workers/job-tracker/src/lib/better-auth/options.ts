@@ -1,6 +1,7 @@
 import type { BetterAuthOptions } from 'better-auth';
 import { magicLink } from 'better-auth/plugins';
 import type { CloudflareBindings } from '../../types';
+import { getAllowedOrigins } from '../cors';
 
 /**
  * Shared Better Auth options (plugins, providers, CORS origins).
@@ -9,14 +10,26 @@ import type { CloudflareBindings } from '../../types';
 export function createBetterAuthOptions(
   env: Pick<
     CloudflareBindings,
+    | 'BETTER_AUTH_URL'
+    | 'FRONTEND_URL'
     | 'RESEND_API_KEY'
     | 'GITHUB_CLIENT_ID'
     | 'GITHUB_CLIENT_SECRET'
   >,
 ): BetterAuthOptions {
+  const isHttps = env.BETTER_AUTH_URL.startsWith('https://');
+
   return {
     appName: 'hanhylee job tracker app',
-    trustedOrigins: ['http://localhost:5173', 'http://localhost:8787'],
+    trustedOrigins: getAllowedOrigins(env),
+    ...(isHttps && {
+      advanced: {
+        defaultCookieAttributes: {
+          sameSite: 'none',
+          secure: true,
+        },
+      },
+    }),
     plugins: [
       magicLink({
         sendMagicLink: async ({ email, url }) => {

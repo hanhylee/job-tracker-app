@@ -66,6 +66,10 @@ async function main() {
   const id = created.application.id;
 
   await req("GET /api/applications/:id", `/api/applications/${id}`, 200);
+  await req("PATCH /api/applications/:id", `/api/applications/${id}`, 200, {
+    method: "PATCH",
+    body: JSON.stringify({ status: "interviewing", notes: "Updated by test-api.ts" }),
+  });
   await req("DELETE /api/applications/:id", `/api/applications/${id}`, 200, {
     method: "DELETE",
   });

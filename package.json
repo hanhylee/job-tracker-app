@@ -3,9 +3,12 @@
   "private": true,
   "workspaces": [
     "workers/*",
-    "packages/*"
+    "packages/*",
+    "frontend"
   ],
   "scripts": {
-    "deploy": "npm run deploy -w job-tracker-api"
+    "deploy": "npm run deploy -w job-tracker-api",
+    "dev:web": "npm run dev -w job-tracker-web",
+    "build:web": "npm run build -w job-tracker-web"
   }
 }

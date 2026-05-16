@@ -3,6 +3,7 @@ import type { CloudflareBindings, Variables } from "../types";
 import { applications } from "../db/application-schema";
 import { getDb } from "../db/client";
 import { eq, and } from "drizzle-orm";
+import { isApplicationStatus } from "../lib/application-status";
 
 export const applicationsRoutes = new Hono<{
   Bindings: CloudflareBindings;
@@ -48,6 +49,44 @@ export const applicationsRoutes = new Hono<{
     }
     return c.json({ success: true, application: row });
   })
+  .patch("/:id", async (c) => {
+    const user = c.get("user");
+    const { id } = c.req.param();
+    const body = await c.req.json<{
+      company?: string;
+      title?: string;
+      status?: string;
+      jobUrl?: string | null;
+      notes?: string | null;
+    }>();
+
+    if (body.status !== undefined && !isApplicationStatus(body.status)) {
+      return c.json({ error: "Invalid status" }, 400);
+    }
+
+    const updates: Record<string, unknown> = { updatedAt: new Date() };
+    if (body.company !== undefined) updates.company = body.company;
+    if (body.title !== undefined) updates.title = body.title;
+    if (body.status !== undefined) updates.status = body.status;
+    if (body.jobUrl !== undefined) updates.jobUrl = body.jobUrl;
+    if (body.notes !== undefined) updates.notes = body.notes;
+
+    if (Object.keys(updates).length === 1) {
+      return c.json({ error: "No fields to update" }, 400);
+    }
+
+    const db = getDb(c.env);
+    const [updated] = await db
+      .update(applications)
+      .set(updates)
+      .where(and(eq(applications.id, id), eq(applications.userId, user.id)))
+      .returning();
+
+    if (!updated) {
+      return c.json({ error: "Not found" }, 404);
+    }
+    return c.json({ success: true, application: updated });
+  })
   .delete("/:id", async (c) => {
     const user = c.get("user");
     const { id } = c.req.param();
@@ -61,4 +100,3 @@ export const applicationsRoutes = new Hono<{
     }
     return c.json({ success: true, deleted: id });
   });
-  
