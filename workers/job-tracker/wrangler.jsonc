@@ -42,10 +42,13 @@
 					"database_id": "336f22e2-a1ff-4eb1-82bf-cdc9fe36c965"
 				}
 			],
+			// Not secrets — plain config values available instantly as strings
+			"vars": {
+				"BETTER_AUTH_URL": "https://job-tracker-app.0xhanhy.workers.dev",
+				"FRONTEND_URL": "https://cancareer.com"
+			},
 			"secrets_store_secrets": [
-				{ "binding": "BETTER_AUTH_URL",     "store_id": "ce77c2974e834abead64e59c16b236cb", "secret_name": "BETTER_AUTH_URL" },
 				{ "binding": "BETTER_AUTH_SECRET",  "store_id": "ce77c2974e834abead64e59c16b236cb", "secret_name": "BETTER_AUTH_SECRET" },
-				{ "binding": "FRONTEND_URL",        "store_id": "ce77c2974e834abead64e59c16b236cb", "secret_name": "FRONTEND_URL" },
 				{ "binding": "GITHUB_CLIENT_ID",    "store_id": "ce77c2974e834abead64e59c16b236cb", "secret_name": "GITHUB_CLIENT_ID" },
 				{ "binding": "GITHUB_CLIENT_SECRET","store_id": "ce77c2974e834abead64e59c16b236cb", "secret_name": "GITHUB_CLIENT_SECRET" },
 				{ "binding": "RESEND_API_KEY",      "store_id": "ce77c2974e834abead64e59c16b236cb", "secret_name": "RESEND_API_KEY" }
