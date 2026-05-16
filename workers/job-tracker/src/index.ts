@@ -6,13 +6,15 @@ import type { Variables } from "./types";
 import { authMiddleware } from "./lib/better-auth/middleware";
 import { applicationsRoutes } from "./routes";
 import { getAllowedOrigins } from "./lib/cors";
-import { resolveEnv } from "./lib/resolve-env";
+import { resolveEnv, resolveSecret } from "./lib/resolve-env";
 
 const app = new Hono<{ Bindings: CloudflareBindings; Variables: Variables }>();
 
 app.use("*", async (c, next) => {
-  const env = await resolveEnv(c.env);
-  const allowed = getAllowedOrigins(env);
+  // Resolve only FRONTEND_URL here — resolving all secrets would cause OPTIONS
+  // preflight to fail with no CORS headers if any secret is unavailable.
+  const frontendUrl = await resolveSecret(c.env.FRONTEND_URL);
+  const allowed = getAllowedOrigins({ FRONTEND_URL: frontendUrl });
   return cors({
     origin: (origin) => {
       if (!origin) return allowed[0] ?? null;

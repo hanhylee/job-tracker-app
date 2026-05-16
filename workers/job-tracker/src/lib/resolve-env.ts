@@ -2,10 +2,17 @@ import type { CloudflareBindings } from '../types';
 
 type MaybeSecret = string | undefined | { get(): Promise<string> };
 
-async function resolveSecret(value: MaybeSecret): Promise<string | undefined> {
+export async function resolveSecret(value: MaybeSecret): Promise<string | undefined> {
   if (value == null) return undefined;
   if (typeof value === 'string') return value || undefined;
-  if (typeof value === 'object' && 'get' in value) return value.get();
+  if (typeof value === 'object' && 'get' in value) {
+    try {
+      return await value.get();
+    } catch (e) {
+      console.error('[resolveSecret] Secrets Store .get() failed:', e);
+      return undefined;
+    }
+  }
   return undefined;
 }
 
