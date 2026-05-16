@@ -4,5 +4,8 @@
   "workspaces": [
     "workers/*",
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "deploy": "npm run deploy -w cloudflare-workers-openapi"
+  }
 }

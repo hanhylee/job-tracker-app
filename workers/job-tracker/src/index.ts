@@ -1,26 +1,66 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
-import { TaskCreate } from "./endpoints/taskCreate";
-import { TaskDelete } from "./endpoints/taskDelete";
-import { TaskFetch } from "./endpoints/taskFetch";
-import { TaskList } from "./endpoints/taskList";
+import type { CloudflareBindings } from "./bindings";
+import { auth } from "./lib/better-auth";
+import type { Auth } from "./lib/better-auth";
+import { authMiddleware } from "./lib/better-auth/middleware";
+import {
+  ApplicationCreate,
+  ApplicationDelete,
+  ApplicationFetch,
+  ApplicationList,
+} from "./endpoints";
 
-// Start a Hono app
-const app = new Hono<{ Bindings: Env }>();
+type Session = Auth["$Infer"]["Session"];
 
-// Setup OpenAPI registry
-const openapi = fromHono(app, {
-	docs_url: "/",
+export type Variables = {
+  user: Session["user"];
+  session: Session["session"];
+};
+
+const app = new Hono<{ Bindings: CloudflareBindings; Variables: Variables }>();
+
+app.on(["POST", "GET"], "/api/auth/**", (c) => {
+  return auth(c.env).handler(c.req.raw);
 });
 
-// Register OpenAPI endpoints
-openapi.get("/api/tasks", TaskList);
-openapi.post("/api/tasks", TaskCreate);
-openapi.get("/api/tasks/:taskSlug", TaskFetch);
-openapi.delete("/api/tasks/:taskSlug", TaskDelete);
+const openapi = fromHono(app, {
+  docs_url: "/",
+  schema: {
+    info: {
+      title: "hanhylee's Job Tracker API",
+      version: "1.0.0",
+    },
+    security: [
+      {
+        cookieAuth: [],
+      },
+    ],
+  },
+});
 
-// You may also register routes for non OpenAPI directly on Hono
-// app.get('/test', (c) => c.text('Hono!'))
+app.use("/api/applications", authMiddleware);
+app.use("/api/applications/*", authMiddleware);
 
-// Export the Hono app
+openapi.registry.registerComponent("securitySchemes", "cookieAuth", {
+  type: "apiKey",
+  in: "cookie",
+  name: "better-auth.session_token",
+});
+
+openapi.get("/api/applications", ApplicationList);
+openapi.post("/api/applications", ApplicationCreate);
+openapi.get("/api/applications/:applicationSlug", ApplicationFetch);
+openapi.delete("/api/applications/:applicationSlug", ApplicationDelete);
+
+app.get("/api/applications", async (c) => {
+  const user = c.get("user");
+
+  return c.json({
+    message: `Welcome to your applications, ${user.email}`,
+    userId: user.id,
+    applications: [],
+  });
+});
+
 export default app;

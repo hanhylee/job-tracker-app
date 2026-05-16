@@ -1,25 +1,25 @@
 import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
-import { type AppContext, Task } from "../types";
+import { type AppContext, Application } from "../types";
 
-export class TaskDelete extends OpenAPIRoute {
+export class ApplicationDelete extends OpenAPIRoute {
 	schema = {
-		tags: ["Tasks"],
-		summary: "Delete a Task",
+		tags: ["Applications"],
+		summary: "Delete an application",
 		request: {
 			params: z.object({
-				taskSlug: z.string().describe("Task slug"),
+				applicationSlug: z.string().describe("Application slug"),
 			}),
 		},
 		responses: {
 			"200": {
-				description: "Returns if the task was deleted successfully",
+				description: "Returns if the application was deleted successfully",
 				content: {
 					"application/json": {
 						schema: z.object({
 							success: z.boolean(),
 							result: z.object({
-								task: Task,
+								application: Application,
 							}),
 						}),
 					},
@@ -33,16 +33,16 @@ export class TaskDelete extends OpenAPIRoute {
 		const data = await this.getValidatedData<typeof this.schema>();
 
 		// Retrieve the validated slug
-		const { taskSlug } = data.params;
+		const { applicationSlug } = data.params;
 
 		// Implement your own object deletion here
 
-		// Return the deleted task for confirmation
+		// Return the deleted application for confirmation
 		return {
 			result: {
-				task: {
+				application: {
 					name: "Build something awesome with Cloudflare Workers",
-					slug: taskSlug,
+					slug: applicationSlug,
 					description: "Lorem Ipsum",
 					completed: true,
 					due_date: "2022-12-24",

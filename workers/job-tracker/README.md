@@ -1,25 +1,62 @@
-# Cloudflare Workers OpenAPI 3.1
+# Job Tracker API
 
-This is a Cloudflare Worker with OpenAPI 3.1 using [chanfana](https://github.com/cloudflare/chanfana) and [Hono](https://github.com/honojs/hono).
+Cloudflare Worker API for tracking job applications. Built with [Hono](https://hono.dev), [chanfana](https://chanfana.pages.dev) (OpenAPI), [Better Auth](https://www.better-auth.com), and remote **D1**.
 
-This is an example project made to be used as a quick start into building OpenAPI compliant Workers that generates the
-`openapi.json` schema automatically from code and validates the incoming request to the defined parameters or request body.
+## Setup
 
-## Get started
+```bash
+npm install
+cp .dev.vars.example .dev.vars   # fill in secrets
+wrangler login
+```
 
-1. Sign up for [Cloudflare Workers](https://workers.dev). The free tier is more than enough for most use cases.
-2. Clone this project and install dependencies with `npm install`
-3. Run `wrangler login` to login to your Cloudflare account in wrangler
-4. Run `wrangler deploy` to publish the API to Cloudflare Workers
-
-## Project structure
-
-1. Your main router is defined in `src/index.ts`.
-2. Each endpoint has its own file in `src/endpoints/`.
-3. For more information read the [chanfana documentation](https://chanfana.pages.dev/) and [Hono documentation](https://hono.dev/docs).
+Generate a secret: `npx auth@latest secret`
 
 ## Development
 
-1. Run `wrangler dev` to start a local instance of the API.
-2. Open `http://localhost:8787/` in your browser to see the Swagger interface where you can try the endpoints.
-3. Changes made in the `src/` folder will automatically trigger the server to reload, you only need to refresh the Swagger interface.
+```bash
+npm run dev
+```
+
+Open http://localhost:8787 for Swagger. The worker uses your **remote** D1 database (`wrangler.jsonc` has `"remote": true`).
+
+## Sign in (magic link)
+
+```powershell
+Invoke-RestMethod -Uri "http://localhost:8787/api/auth/sign-in/magic-link" `
+  -Method Post `
+  -Headers @{ "Content-Type" = "application/json" } `
+  -Body '{"email": "you@example.com", "callbackURL": "http://localhost:8787/api/applications"}'
+```
+
+The link is printed in the terminal. After verifying, use the session cookie on protected routes (`/api/applications/*`).
+
+## Deploy (Cloudflare Git)
+
+From the **repo root**, set the deploy command to:
+
+```bash
+npm run deploy
+```
+
+(Not `npx wrangler …` from root — wrangler lives in the worker workspace.)
+
+Or set the project **root directory** to `workers/job-tracker` and use `npx wrangler versions upload`.
+
+## Scripts
+
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Local API |
+| `npm run deploy` | Upload worker version |
+| `npm run auth:generate` | Regenerate `src/db/auth-schema.ts` |
+| `npm run db:generate` | New Drizzle migration from schema |
+| `npm run db:migrate:remote` | Apply migrations to remote D1 |
+
+## Layout
+
+- `src/index.ts` — routes and OpenAPI
+- `src/endpoints/` — application CRUD handlers
+- `src/lib/better-auth/` — auth config and middleware
+- `src/db/auth-schema.ts` — Better Auth tables (generated)
+- `src/db/schema.ts` — app tables (`applications`)

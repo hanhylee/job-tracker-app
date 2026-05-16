@@ -1,28 +1,28 @@
 import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
-import { type AppContext, Task } from "../types";
+import { type AppContext, Application } from "../types";
 
-export class TaskCreate extends OpenAPIRoute {
+export class ApplicationCreate extends OpenAPIRoute {
 	schema = {
-		tags: ["Tasks"],
-		summary: "Create a new Task",
+		tags: ["Applications"],
+		summary: "Create a new application",
 		request: {
 			body: {
 				content: {
 					"application/json": {
-						schema: Task,
+						schema: Application,
 					},
 				},
 			},
 		},
 		responses: {
 			"201": {
-				description: "Returns the created task",
+				description: "Returns the created application",
 				content: {
 					"application/json": {
 						schema: z.object({
 							success: z.boolean(),
-							task: Task,
+							application: Application,
 						}),
 					},
 				},
@@ -35,20 +35,20 @@ export class TaskCreate extends OpenAPIRoute {
 		const data = await this.getValidatedData<typeof this.schema>();
 
 		// Retrieve the validated request body
-		const taskToCreate = data.body;
+		const applicationToCreate = data.body;
 
 		// Implement your own object insertion here
 
-		// return the new task
+		// return the new application
 		return c.json(
 			{
 				success: true,
-				task: {
-					name: taskToCreate.name,
-					slug: taskToCreate.slug,
-					description: taskToCreate.description,
-					completed: taskToCreate.completed,
-					due_date: taskToCreate.due_date,
+				application: {
+					name: applicationToCreate.name,
+					slug: applicationToCreate.slug,
+					description: applicationToCreate.description,
+					completed: applicationToCreate.completed,
+					due_date: applicationToCreate.due_date,
 				},
 			},
 			201,

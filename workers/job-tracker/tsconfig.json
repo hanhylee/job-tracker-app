@@ -23,5 +23,5 @@
 		]
 	},
 	"exclude": ["node_modules", "dist", "tests"],
-	"include": ["src", "worker-configuration.d.ts"]
+	"include": ["src", "worker-configuration.d.ts", "better-auth.config.ts"]
 }
