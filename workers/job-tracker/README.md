@@ -1,6 +1,6 @@
 # Job Tracker API
 
-Cloudflare Worker API for tracking job applications. Built with [Hono](https://hono.dev), [chanfana](https://chanfana.pages.dev) (OpenAPI), [Better Auth](https://www.better-auth.com), and remote **D1**.
+Cloudflare Worker API for tracking job applications. Built with [Hono](https://hono.dev), [Better Auth](https://www.better-auth.com), Drizzle, and remote **D1**.
 
 ## Setup
 
@@ -18,7 +18,7 @@ Generate a secret: `npx auth@latest secret`
 npm run dev
 ```
 
-Open**http://localhost:8787**. The worker uses your **remote** D1 database (`wrangler.jsonc` has `"remote": true`).
+Open **http://localhost:8787**. The worker uses your **remote** D1 database (`wrangler.jsonc` has `"remote": true`).
 
 Set in `.dev.vars`:
 
