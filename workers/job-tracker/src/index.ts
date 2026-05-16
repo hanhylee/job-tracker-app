@@ -1,6 +1,6 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
-import type { CloudflareBindings } from "./bindings";
+import type { CloudflareBindings } from "./types";
 import { auth } from "./lib/better-auth";
 import type { Auth } from "./lib/better-auth";
 import { authMiddleware } from "./lib/better-auth/middleware";

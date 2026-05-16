@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/d1';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { betterAuth } from 'better-auth';
-import type { CloudflareBindings } from '../../bindings';
+import type { CloudflareBindings } from '../../types';
 import { schema } from '../../db';
 import { createBetterAuthOptions } from './options';
 

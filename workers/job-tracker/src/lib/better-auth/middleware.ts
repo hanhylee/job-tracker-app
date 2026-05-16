@@ -1,5 +1,5 @@
 import { createMiddleware } from 'hono/factory';
-import type { CloudflareBindings } from '../../bindings';
+import type { CloudflareBindings } from '../../types';
 import { auth } from './index';
 
 export const authMiddleware = createMiddleware<{

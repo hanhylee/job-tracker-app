@@ -1,6 +1,6 @@
 import type { BetterAuthOptions } from 'better-auth';
 import { magicLink } from 'better-auth/plugins';
-import type { CloudflareBindings } from '../../bindings';
+import type { CloudflareBindings } from '../../types';
 
 /**
  * Shared Better Auth options (plugins, providers, CORS origins).
