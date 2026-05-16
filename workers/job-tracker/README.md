@@ -31,12 +31,24 @@ Invoke-RestMethod -Uri "http://localhost:8787/api/auth/sign-in/magic-link" `
 
 The link is printed in the terminal. After verifying, use the session cookie on protected routes (`/api/applications/*`).
 
+## Deploy (Cloudflare Git)
+
+From the **repo root**, set the deploy command to:
+
+```bash
+npm run deploy
+```
+
+(Not `npx wrangler …` from root — wrangler lives in the worker workspace.)
+
+Or set the project **root directory** to `workers/job-tracker` and use `npx wrangler versions upload`.
+
 ## Scripts
 
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Local API |
-| `npm run deploy` | Deploy worker |
+| `npm run deploy` | Upload worker version |
 | `npm run auth:generate` | Regenerate `src/db/auth-schema.ts` |
 | `npm run db:generate` | New Drizzle migration from schema |
 | `npm run db:migrate:remote` | Apply migrations to remote D1 |
