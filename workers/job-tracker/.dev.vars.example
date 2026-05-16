@@ -1,5 +1,7 @@
 BETTER_AUTH_URL=http://localhost:8787
 BETTER_AUTH_SECRET=
+# Comma-separated. Production example (www is auto-added for each host):
+# FRONTEND_URL=https://cancareer.com
 FRONTEND_URL=http://localhost:5173
 GITHUB_CLIENT_ID=
 GITHUB_CLIENT_SECRET=

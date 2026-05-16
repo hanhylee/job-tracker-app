@@ -31,14 +31,21 @@ FRONTEND_URL=http://localhost:5173
 
 The web app lives in `frontend/` at the repo root. See [`frontend/README.md`](../../frontend/README.md).
 
-Production:
+Production (Cloudflare dashboard → Worker → Settings → Variables and Secrets):
 
 ```env
-BETTER_AUTH_URL=https://api.cancareer.com
-FRONTEND_URL=https://cancareer.com,https://www.cancareer.com
+BETTER_AUTH_URL=https://job-tracker-app.0xhanhy.workers.dev
+# or https://api.cancareer.com once custom domain is wired
+
+FRONTEND_URL=https://cancareer.com
+# www is added automatically; list both only if you use other hosts too
 ```
 
-CORS and Better Auth `trustedOrigins` use `FRONTEND_URL`. Cross-site cookies (`SameSite=None`) apply when `BETTER_AUTH_URL` is HTTPS.
+Set the same values as **secrets** if you use Wrangler secrets. Redeploy the worker after changing them.
+
+`VITE_API_URL` on Vercel must match `BETTER_AUTH_URL` (same API host).
+
+CORS and Better Auth `trustedOrigins` use `FRONTEND_URL`. If the browser origin is not allowed, you will see **No Access-Control-Allow-Origin**. Cross-site cookies (`SameSite=None`) apply when `BETTER_AUTH_URL` is HTTPS.
 
 ### Applications API
 
