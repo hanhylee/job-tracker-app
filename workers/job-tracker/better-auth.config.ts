@@ -23,6 +23,7 @@ const db = drizzle(sqlite);
 
 export const auth = betterAuth({
   ...createBetterAuthOptions({
+    BETTER_AUTH_URL,
     GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET,
     RESEND_API_KEY,

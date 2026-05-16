@@ -1,6 +1,6 @@
 import type { BetterAuthOptions } from 'better-auth';
 import { magicLink } from 'better-auth/plugins';
-import type { CloudflareBindings } from '../../types';
+import type { ResolvedEnv } from '../resolve-env';
 import { getAllowedOrigins } from '../cors';
 
 /**
@@ -9,7 +9,7 @@ import { getAllowedOrigins } from '../cors';
  */
 export function createBetterAuthOptions(
   env: Pick<
-    CloudflareBindings,
+    ResolvedEnv,
     | 'BETTER_AUTH_URL'
     | 'FRONTEND_URL'
     | 'RESEND_API_KEY'

@@ -1,5 +1,6 @@
 import { createMiddleware } from 'hono/factory';
 import type { CloudflareBindings } from '../../types';
+import { resolveEnv } from '../resolve-env';
 import { auth } from './index';
 
 export const authMiddleware = createMiddleware<{
@@ -13,7 +14,8 @@ export const authMiddleware = createMiddleware<{
     >['session'];
   };
 }>(async (c, next) => {
-  const session = await auth(c.env).api.getSession({
+  const env = await resolveEnv(c.env);
+  const session = await auth(env).api.getSession({
     headers: c.req.raw.headers,
   });
 

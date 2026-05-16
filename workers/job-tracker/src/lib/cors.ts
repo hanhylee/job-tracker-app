@@ -1,4 +1,4 @@
-import type { CloudflareBindings } from '../types';
+import type { ResolvedEnv } from './resolve-env';
 
 const DEFAULT_ORIGINS = ['http://localhost:5173', 'http://localhost:8787'];
 
@@ -28,7 +28,7 @@ function expandOriginVariants(origins: string[]): string[] {
 }
 
 export function getAllowedOrigins(
-  env: Pick<CloudflareBindings, 'FRONTEND_URL'>,
+  env: Pick<ResolvedEnv, 'FRONTEND_URL'>,
 ): string[] {
   const fromEnv = env.FRONTEND_URL
     ? env.FRONTEND_URL.split(',')

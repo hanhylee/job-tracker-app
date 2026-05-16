@@ -6,11 +6,13 @@ import type { Variables } from "./types";
 import { authMiddleware } from "./lib/better-auth/middleware";
 import { applicationsRoutes } from "./routes";
 import { getAllowedOrigins } from "./lib/cors";
+import { resolveEnv } from "./lib/resolve-env";
 
 const app = new Hono<{ Bindings: CloudflareBindings; Variables: Variables }>();
 
 app.use("*", async (c, next) => {
-  const allowed = getAllowedOrigins(c.env);
+  const env = await resolveEnv(c.env);
+  const allowed = getAllowedOrigins(env);
   return cors({
     origin: (origin) => {
       if (!origin) return allowed[0] ?? null;
@@ -22,8 +24,9 @@ app.use("*", async (c, next) => {
   })(c, next);
 });
 
-app.on(["POST", "GET"], "/api/auth/**", (c) => {
-  return auth(c.env).handler(c.req.raw);
+app.on(["POST", "GET"], "/api/auth/**", async (c) => {
+  const env = await resolveEnv(c.env);
+  return auth(env).handler(c.req.raw);
 });
 
 app.use("/api/applications", authMiddleware);

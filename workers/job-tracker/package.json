@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "deploy": "wrangler versions upload",
+    "deploy": "wrangler deploy --env production",
     "dev": "wrangler dev --ip localhost --port 8787",
     "start": "wrangler dev --ip localhost --port 8787",
     "cf-typegen": "wrangler types",

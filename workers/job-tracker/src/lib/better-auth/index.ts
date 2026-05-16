@@ -1,11 +1,11 @@
 import { drizzle } from 'drizzle-orm/d1';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { betterAuth } from 'better-auth';
-import type { CloudflareBindings } from '../../types';
+import type { ResolvedEnv } from '../resolve-env';
 import { schema } from '../../db';
 import { createBetterAuthOptions } from './options';
 
-export const auth = (env: CloudflareBindings) => {
+export const auth = (env: ResolvedEnv) => {
   const db = drizzle(env.db, { schema });
 
   return betterAuth({
