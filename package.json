@@ -6,6 +6,6 @@
     "packages/*"
   ],
   "scripts": {
-    "deploy": "npm run deploy -w cloudflare-workers-openapi"
+    "deploy": "npm run deploy -w job-tracker-api"
   }
 }
