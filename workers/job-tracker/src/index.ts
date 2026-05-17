@@ -4,7 +4,7 @@ import type { CloudflareBindings } from "./types";
 import { auth } from "./lib/better-auth";
 import type { Variables } from "./types";
 import { authMiddleware } from "./lib/better-auth/middleware";
-import { applicationsRoutes } from "./routes";
+import { applicationsRoutes, r2UsageRoutes } from "./routes";
 import { getAllowedOrigins } from "./lib/cors";
 import { resolveEnv, resolveSecret } from "./lib/resolve-env";
 
@@ -31,7 +31,7 @@ app.use("*", async (c, next) => {
       return allowed.includes(origin) ? origin : null;
     },
     credentials: true,
-    allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization"],
   })(c, next);
 });
@@ -61,5 +61,8 @@ app.on(["POST", "GET"], "/api/auth/**", async (c) => {
 app.use("/api/applications", authMiddleware);
 app.use("/api/applications/*", authMiddleware);
 app.route("/api/applications", applicationsRoutes);
+
+app.use("/api/r2/usage", authMiddleware);
+app.route("/api/r2/usage", r2UsageRoutes);
 
 export default app;

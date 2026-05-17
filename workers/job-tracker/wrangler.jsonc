@@ -22,6 +22,12 @@
 			"remote": true
 		}
 	],
+	"r2_buckets": [
+		{
+			"binding": "RESUMES",
+			"bucket_name": "job-tracker-resumes"
+		}
+	],
 	"dev": {
 		"ip": "localhost",
 		"port": 8787
@@ -40,6 +46,12 @@
 					"binding": "db",
 					"database_name": "db",
 					"database_id": "336f22e2-a1ff-4eb1-82bf-cdc9fe36c965"
+				}
+			],
+			"r2_buckets": [
+				{
+					"binding": "RESUMES",
+					"bucket_name": "job-tracker-resumes"
 				}
 			],
 			// Not secrets — plain config values available instantly as strings

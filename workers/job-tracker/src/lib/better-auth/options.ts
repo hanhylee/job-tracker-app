@@ -39,19 +39,23 @@ export function createBetterAuthOptions(
           console.log('*****************************************');
 
           if (env.RESEND_API_KEY) {
-            await fetch('https://api.resend.com/emails', {
+            const res = await fetch('https://api.resend.com/emails', {
               method: 'POST',
               headers: {
                 Authorization: `Bearer ${env.RESEND_API_KEY}`,
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                from: 'login@yourdomain.com',
+                from: 'hello@cancareer.com',
                 to: email,
                 subject: 'Log in to Job Tracker',
                 html: `<p>Click <a href="${url}">here</a> to log in.</p>`,
               }),
             });
+            if (!res.ok) {
+              const body = await res.text();
+              console.error(`Resend error ${res.status}: ${body}`);
+            }
           }
         },
       }),
