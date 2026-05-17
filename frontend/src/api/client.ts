@@ -10,6 +10,32 @@ export class ApiError extends Error {
   }
 }
 
+async function parseErrorMessage(res: Response): Promise<string> {
+  const data = await res.json().catch(() => ({}));
+  if (typeof data === 'object' && data && 'error' in data) {
+    return String((data as { error: string }).error);
+  }
+  return res.statusText;
+}
+
+export async function apiRequest(
+  path: string,
+  init?: RequestInit,
+): Promise<Response> {
+  const headers = new Headers(init?.headers);
+  const res = await fetch(apiUrl(path), {
+    ...init,
+    credentials: 'include',
+    headers,
+  });
+
+  if (!res.ok) {
+    throw new ApiError(res.status, await parseErrorMessage(res));
+  }
+
+  return res;
+}
+
 export async function apiFetch<T>(
   path: string,
   init?: RequestInit,
@@ -26,11 +52,7 @@ export async function apiFetch<T>(
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    const message =
-      typeof data === 'object' && data && 'error' in data
-        ? String((data as { error: string }).error)
-        : res.statusText;
-    throw new ApiError(res.status, message);
+    throw new ApiError(res.status, await parseErrorMessage(res));
   }
 
   return data as T;

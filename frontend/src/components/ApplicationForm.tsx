@@ -7,13 +7,28 @@ import {
 } from '../lib/schemas';
 import { Button } from './Button';
 import { Input, Select, Textarea } from './Input';
+import { ResumeField } from './ResumeField';
+
+type PendingResumeProps = {
+  resumeMode: 'pending';
+  pendingResumeFile: File | null;
+  onPendingResumeChange: (file: File | null) => void;
+};
+
+type LiveResumeProps = {
+  resumeMode: 'live';
+  applicationId: string;
+  resumeCompany: string;
+  resumeTitle: string;
+  hasResume: boolean;
+};
 
 type ApplicationFormProps = {
   initial?: Application;
   onSubmit: (values: ApplicationFormValues) => Promise<void>;
   onDelete?: () => Promise<void>;
   submitLabel?: string;
-};
+} & (PendingResumeProps | LiveResumeProps | { resumeMode?: undefined });
 
 const emptyValues: ApplicationFormValues = {
   company: '',
@@ -23,12 +38,8 @@ const emptyValues: ApplicationFormValues = {
   notes: '',
 };
 
-export function ApplicationForm({
-  initial,
-  onSubmit,
-  onDelete,
-  submitLabel = 'Save',
-}: ApplicationFormProps) {
+export function ApplicationForm(props: ApplicationFormProps) {
+  const { initial, onSubmit, onDelete, submitLabel = 'Save', resumeMode } = props;
   const [values, setValues] = useState<ApplicationFormValues>(
     initial
       ? {
@@ -127,6 +138,22 @@ export function ApplicationForm({
         onChange={(e) => update('notes', e.target.value)}
         error={errors.notes}
       />
+      {resumeMode === 'pending' ? (
+        <ResumeField
+          mode="pending"
+          file={props.pendingResumeFile}
+          onFileChange={props.onPendingResumeChange}
+        />
+      ) : null}
+      {resumeMode === 'live' ? (
+        <ResumeField
+          mode="live"
+          applicationId={props.applicationId}
+          company={props.resumeCompany}
+          title={props.resumeTitle}
+          hasResume={props.hasResume}
+        />
+      ) : null}
       <div className="flex flex-col gap-3 pt-2 sm:flex-row">
         <Button type="submit" disabled={submitting} className="flex-1">
           {submitting ? 'Saving…' : submitLabel}
