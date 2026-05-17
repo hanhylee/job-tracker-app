@@ -56,6 +56,10 @@ CORS and Better Auth `trustedOrigins` use `FRONTEND_URL`. If the browser origin 
 | `GET` | `/api/applications/:id` | Session cookie |
 | `PATCH` | `/api/applications/:id` | Session cookie |
 | `DELETE` | `/api/applications/:id` | Session cookie |
+| `PUT` | `/api/applications/:id/resume` | Session cookie — PDF body |
+| `GET` | `/api/applications/:id/resume` | Session cookie — streams PDF |
+| `DELETE` | `/api/applications/:id/resume` | Session cookie |
+| `GET` | `/api/r2/usage` | Session cookie — monthly R2 free-tier counters |
 
 ## Sign in (magic link)
 
@@ -114,10 +118,12 @@ Invoke-RestMethod -Uri "http://localhost:8787/api/auth/get-session" -Headers @{
 ### Run tests
 
 ```bash
-npm run test:api
+npm run test:api      # applications CRUD
+npm run test:resume   # R2 resume upload/download/delete + /api/r2/usage
+npm run test          # both
 ```
 
-Runs: health check → list → create → get by id → patch → delete.
+`test:resume` covers: PDF validation, upload/download/replace, resume delete, application delete cleanup, ownership checks, and usage counter shape. Requires R2 binding (`job-tracker-resumes` bucket) and migration `0003` applied (`npm run db:migrate:remote`).
 
 | Error | Fix |
 |-------|-----|
@@ -146,13 +152,19 @@ Or set the project **root directory** to `workers/job-tracker` and use `npx wran
 | `npm run auth:generate` | Regenerate `src/db/auth-schema.ts` |
 | `npm run db:generate` | New Drizzle migration from schema |
 | `npm run db:migrate:remote` | Apply migrations to remote D1 |
-| `npm run test:api` | Smoke-test `/api/applications` (dev server + `SESSION_TOKEN` in `.dev.vars`) |
+| `npm run test:api` | Smoke-test `/api/applications` |
+| `npm run test:resume` | Resume + R2 usage endpoints |
+| `npm run test` | Run `test:api` then `test:resume` |
 
 ## Layout
 
 - `src/index.ts` — app entry, auth mount, route wiring
-- `src/routes/` — application HTTP handlers
+- `src/routes/` — application and R2 usage HTTP handlers
+- `src/lib/resume-storage.ts` — R2 resume put/get/delete wrappers
+- `src/lib/r2-usage.ts` — monthly free-tier counters and limits
 - `src/lib/better-auth/` — auth config and middleware
 - `src/db/auth-schema.ts` — Better Auth tables (generated)
 - `src/db/application-schema.ts` — `applications` table
-- `test/test-api.ts` — local API smoke tests
+- `test/helpers.ts` — shared fetch helpers for integration tests
+- `test/test-api.ts` — applications CRUD smoke tests
+- `test/test-resume.ts` — R2 resume + usage smoke tests

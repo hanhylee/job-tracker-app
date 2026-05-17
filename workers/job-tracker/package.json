@@ -10,7 +10,9 @@
     "auth:generate": "auth generate --config ./better-auth.config.ts --yes",
     "db:generate": "drizzle-kit generate",
     "db:migrate:remote": "wrangler d1 migrations apply db --remote",
-    "test:api": "tsx test/test-api.ts"
+    "test:api": "tsx test/test-api.ts",
+    "test:resume": "tsx test/test-resume.ts",
+    "test": "tsx test/test-api.ts && tsx test/test-resume.ts"
   },
   "dependencies": {
     "better-auth": "^1.6.10",
