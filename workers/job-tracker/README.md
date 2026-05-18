@@ -34,9 +34,7 @@ The web app lives in `frontend/` at the repo root. See [`frontend/README.md`](..
 Production (Cloudflare dashboard → Worker → Settings → Variables and Secrets):
 
 ```env
-BETTER_AUTH_URL=https://job-tracker-app.0xhanhy.workers.dev
-# or https://api.cancareer.com once custom domain is wired
-
+BETTER_AUTH_URL=https://api.cancareer.com
 FRONTEND_URL=https://cancareer.com
 # www is added automatically; list both only if you use other hosts too
 ```

@@ -55,7 +55,28 @@ app.onError(async (err, c) => {
 
 app.all("/api/auth/*", async (c) => {
   const env = await resolveEnv(c.env);
-  return auth(env).handler(c.req.raw);
+  const response = await auth(env).handler(c.req.raw);
+
+  // better-auth returns a raw Response that bypasses Hono's context header
+  // buffering. Explicitly apply CORS headers so they are always present,
+  // including on preflight (OPTIONS) responses better-auth may generate.
+  const requestOrigin = c.req.header("origin");
+  if (requestOrigin) {
+    const frontendUrl = await resolveSecret(c.env.FRONTEND_URL);
+    const allowed = getAllowedOrigins({ FRONTEND_URL: frontendUrl });
+    if (allowed.includes(requestOrigin)) {
+      const headers = new Headers(response.headers);
+      headers.set("Access-Control-Allow-Origin", requestOrigin);
+      headers.set("Access-Control-Allow-Credentials", "true");
+      headers.set("Vary", "Origin");
+      return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers,
+      });
+    }
+  }
+  return response;
 });
 
 app.use("/api/applications", authMiddleware);
