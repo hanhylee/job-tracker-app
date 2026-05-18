@@ -11,7 +11,7 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  if (!isPending && session) {
+  if (!isPending && session?.user) {
     return <Navigate to="/" replace />;
   }
 
