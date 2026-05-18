@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/proxy/:path*", "destination": "https://job-tracker-app.0xhanhy.workers.dev/:path*" },
+    { "source": "/api/:path*", "destination": "https://job-tracker-app.0xhanhy.workers.dev/api/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
