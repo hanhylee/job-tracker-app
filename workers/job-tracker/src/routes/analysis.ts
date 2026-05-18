@@ -3,6 +3,7 @@ import { and, eq } from 'drizzle-orm';
 import type { CloudflareBindings, Variables } from '../types';
 import { applications } from '../db/application-schema';
 import { getDb } from '../db/client';
+import { proxyAnalyzerJson } from '../lib/analyzer-proxy';
 import { requireProMembership } from '../lib/pro-membership';
 
 export const analysisRoutes = new Hono<{
@@ -45,9 +46,7 @@ export const analysisRoutes = new Hono<{
       }),
     });
 
-    const analyzerResponse = await c.env.ANALYZER.fetch(analyzerRequest);
-    const body = await analyzerResponse.json();
-    return c.json(body, analyzerResponse.status as 200 | 202 | 400 | 403 | 404);
+    return proxyAnalyzerJson(c, analyzerRequest, [200, 202, 400, 403, 404]);
   })
   .get('/:id/analysis', async (c) => {
     const denied = await requireProMembership(c);
@@ -72,9 +71,7 @@ export const analysisRoutes = new Hono<{
       { method: 'GET' },
     );
 
-    const analyzerResponse = await c.env.ANALYZER.fetch(analyzerRequest);
-    const body = await analyzerResponse.json();
-    return c.json(body, analyzerResponse.status as 200 | 404);
+    return proxyAnalyzerJson(c, analyzerRequest, [200, 404]);
   })
   .get('/analyses/:analysisId', async (c) => {
     const denied = await requireProMembership(c);
@@ -88,7 +85,5 @@ export const analysisRoutes = new Hono<{
       { method: 'GET' },
     );
 
-    const analyzerResponse = await c.env.ANALYZER.fetch(analyzerRequest);
-    const body = await analyzerResponse.json();
-    return c.json(body, analyzerResponse.status as 200 | 403 | 404);
+    return proxyAnalyzerJson(c, analyzerRequest, [200, 403, 404]);
   });

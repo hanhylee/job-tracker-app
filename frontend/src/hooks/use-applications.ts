@@ -48,6 +48,7 @@ export function useCreateApplication() {
         title: input.title,
         status: input.status ?? 'applied',
         jobUrl: input.jobUrl ?? null,
+        jobDescription: null,
         resumeUrl: null,
         notes: input.notes ?? null,
         appliedAt: null,

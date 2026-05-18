@@ -6,6 +6,7 @@ import {
   jsonReq,
   pollAnalysis,
   readFixtureText,
+  requireSessionToken,
   resumeTestPdf,
   rawReq,
 } from "./helpers.js";
@@ -44,16 +45,19 @@ async function deleteApplication(id: string): Promise<void> {
 }
 
 async function testProGate(applicationId: string): Promise<boolean> {
-  const session = await getSession();
-  const isPro = session?.user?.isPro === true;
+  const probe = await fetch(
+    `${BASE}/api/applications/${applicationId}/analyze`,
+    { method: "POST", headers: { Cookie: cookie() } },
+  );
+  const isPro = probe.status !== 403;
 
   if (!isPro) {
-    const { body } = await jsonReq(
-      "POST analyze without Pro (403)",
-      `/api/applications/${applicationId}/analyze`,
-      403,
-      { method: "POST" },
-    );
+    const body = (await probe.json().catch(() => ({}))) as { code?: string };
+    console.log("\n=== POST analyze without Pro (403) ===");
+    console.log(probe.status, JSON.stringify(body, null, 2));
+    if (probe.status !== 403) {
+      throw new Error(`POST analyze without Pro (403): expected 403, got ${probe.status}`);
+    }
     const code = (body as { code?: string }).code;
     if (code !== "PRO_REQUIRED") {
       throw new Error(`Expected PRO_REQUIRED, got ${code}`);

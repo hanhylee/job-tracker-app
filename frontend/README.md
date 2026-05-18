@@ -10,7 +10,15 @@ From the **repo root**:
 npm install
 ```
 
-Terminal 1 — API (port 8787):
+Terminal 1 — API + resume analyzer (port 8787):
+
+```bash
+npm run dev:workers
+```
+
+Use `dev:workers` (not `dev:api` alone) so the **resume-analyzer** service binding is connected. Analysis endpoints return 503 if only the job-tracker worker is running.
+
+Legacy (API only, no analysis):
 
 ```bash
 npm run dev -w job-tracker-api
