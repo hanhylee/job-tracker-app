@@ -1,6 +1,8 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AppShell } from './components/AppShell';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { AnalysisPage } from './pages/AnalysisPage';
+import { AnalyzePage } from './pages/AnalyzePage';
 import { ApplicationPage } from './pages/ApplicationPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
@@ -13,6 +15,8 @@ export function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<AppShell />}>
             <Route index element={<HomePage />} />
+            <Route path="applications/:id/analyze" element={<AnalyzePage />} />
+            <Route path="applications/:id/analysis" element={<AnalysisPage />} />
             <Route path="applications/:id" element={<ApplicationPage />} />
           </Route>
         </Route>

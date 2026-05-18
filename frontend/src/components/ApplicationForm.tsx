@@ -161,7 +161,7 @@ export function ApplicationForm(props: ApplicationFormProps) {
         {onDelete ? (
           <Button
             type="button"
-            variant="danger"
+            variant="dangerOutline"
             disabled={deleting}
             onClick={handleDelete}
           >

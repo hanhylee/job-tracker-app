@@ -1,17 +1,26 @@
 import type { Application } from '../types/application';
+import type { AnalysisRecord } from '../types/analysis';
 import { ApplicationRow } from './ApplicationRow';
+
+export type ApplicationRowHandlers = {
+  onAnalyze: (app: Application) => void;
+  onViewAnalysis: (app: Application) => void;
+  getAnalysis: (id: string) => AnalysisRecord | null;
+};
 
 type ApplicationListProps = {
   applications: Application[];
   isLoading?: boolean;
+  rowHandlers?: ApplicationRowHandlers;
 };
 
 const thClass =
-  'px-1 pb-2 text-left text-[10px] font-medium uppercase tracking-wide text-neutral-400';
+  'px-1 pb-2 text-left text-xs font-medium uppercase tracking-wide text-neutral-400';
 
 export function ApplicationList({
   applications,
   isLoading,
+  rowHandlers,
 }: ApplicationListProps) {
   if (isLoading) {
     return (
@@ -51,7 +60,7 @@ export function ApplicationList({
           <col className="w-[16%]" />
           <col className="w-[16%]" />
           <col />
-          <col className="w-9" />
+          <col className="w-[4.75rem]" />
         </colgroup>
         <thead>
           <tr>
@@ -65,7 +74,13 @@ export function ApplicationList({
         </thead>
         <tbody>
           {applications.map((app) => (
-            <ApplicationRow key={app.id} application={app} />
+            <ApplicationRow
+              key={app.id}
+              application={app}
+              analysis={rowHandlers?.getAnalysis(app.id) ?? null}
+              onAnalyze={rowHandlers?.onAnalyze}
+              onViewAnalysis={rowHandlers?.onViewAnalysis}
+            />
           ))}
         </tbody>
       </table>

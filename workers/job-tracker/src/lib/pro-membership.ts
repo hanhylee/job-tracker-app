@@ -22,7 +22,10 @@ export async function getUserIsPro(
     .from(user)
     .where(eq(user.id, userId))
     .limit(1);
-  return row?.isPro === true;
+  if (!row) return false;
+  // D1 stores booleans as 0/1; treat both as Pro when set in the console.
+  const value = row.isPro as boolean | number;
+  return value === true || value === 1;
 }
 
 export async function requireProMembership<V extends { user: { id: string } }>(

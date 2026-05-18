@@ -22,5 +22,7 @@ export async function assertUserIsPro(
     .from(user)
     .where(eq(user.id, userId))
     .limit(1);
-  return row?.isPro === true;
+  if (!row) return false;
+  const value = row.isPro as boolean | number;
+  return value === true || value === 1;
 }

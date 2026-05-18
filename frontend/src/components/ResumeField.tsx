@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { ApiError } from '../api/client';
 import { downloadApplicationResume } from '../lib/download-resume';
 import { validateResumeFile } from '../lib/resume-validation';
-import { useDeleteResume, useUploadResume } from '../hooks/use-resume';
+import { useUploadResume } from '../hooks/use-resume';
 import { Button } from './Button';
 
 type PendingProps = {
@@ -100,7 +100,6 @@ function LiveResumeField({
 }: LiveProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const uploadMutation = useUploadResume();
-  const deleteMutation = useDeleteResume();
   const [localError, setLocalError] = useState<string | undefined>();
   const [downloading, setDownloading] = useState(false);
 
@@ -134,18 +133,7 @@ function LiveResumeField({
     }
   }
 
-  async function handleRemove() {
-    if (!confirm('Remove the uploaded resume?')) return;
-    setLocalError(undefined);
-    try {
-      await deleteMutation.mutateAsync(applicationId);
-    } catch (err) {
-      setLocalError(err instanceof ApiError ? err.message : 'Remove failed');
-    }
-  }
-
   const uploading = uploadMutation.isPending;
-  const removing = deleteMutation.isPending;
 
   return (
     <ResumeFieldShell
@@ -156,7 +144,7 @@ function LiveResumeField({
         const selected = e.target.files?.[0] ?? null;
         void handleFileChange(selected);
       }}
-      disabled={uploading || removing}
+      disabled={uploading}
       uploading={uploading}
     >
       {hasResume ? (
@@ -164,28 +152,16 @@ function LiveResumeField({
       ) : (
         <p className="text-sm text-neutral-500">No resume uploaded</p>
       )}
-      <div className="flex flex-wrap gap-2">
-        {hasResume ? (
-          <Button
-            type="button"
-            variant="secondary"
-            disabled={downloading || uploading || removing}
-            onClick={() => void handleDownload()}
-          >
-            {downloading ? 'Downloading…' : 'Download'}
-          </Button>
-        ) : null}
-        {hasResume ? (
-          <Button
-            type="button"
-            variant="danger"
-            disabled={removing || uploading}
-            onClick={() => void handleRemove()}
-          >
-            {removing ? 'Removing…' : 'Remove'}
-          </Button>
-        ) : null}
-      </div>
+      {hasResume ? (
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={downloading || uploading}
+          onClick={() => void handleDownload()}
+        >
+          {downloading ? 'Downloading…' : 'Download'}
+        </Button>
+      ) : null}
     </ResumeFieldShell>
   );
 }

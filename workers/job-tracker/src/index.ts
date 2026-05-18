@@ -4,7 +4,7 @@ import type { CloudflareBindings } from "./types";
 import { auth } from "./lib/better-auth";
 import type { Variables } from "./types";
 import { authMiddleware } from "./lib/better-auth/middleware";
-import { applicationsRoutes, analysisRoutes, r2UsageRoutes } from "./routes";
+import { applicationsRoutes, analysisRoutes, meRoutes, r2UsageRoutes } from "./routes";
 import { getAllowedOrigins } from "./lib/cors";
 import { resolveEnv, resolveSecret } from "./lib/resolve-env";
 
@@ -53,7 +53,6 @@ app.onError(async (err, c) => {
   return c.json({ error: err.message }, 500);
 });
 
-// Use `/*` not `/**` — TrieRouter (Workers default) does not match `/**` (404 on all auth routes).
 app.on(["POST", "GET"], "/api/auth/*", async (c) => {
   const env = await resolveEnv(c.env);
   return auth(env).handler(c.req.raw);
@@ -63,6 +62,9 @@ app.use("/api/applications", authMiddleware);
 app.use("/api/applications/*", authMiddleware);
 app.route("/api/applications", applicationsRoutes);
 app.route("/api/applications", analysisRoutes);
+
+app.use("/api/me", authMiddleware);
+app.route("/api/me", meRoutes);
 
 app.use("/api/r2/usage", authMiddleware);
 app.route("/api/r2/usage", r2UsageRoutes);

@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes } from 'react';
 
-type Variant = 'primary' | 'secondary' | 'danger' | 'ghost';
+type Variant = 'primary' | 'secondary' | 'danger' | 'dangerOutline' | 'ghost';
 
 const variants: Record<Variant, string> = {
   primary:
@@ -9,6 +9,8 @@ const variants: Record<Variant, string> = {
     'bg-white text-neutral-900 shadow-sm ring-1 ring-neutral-200 hover:bg-neutral-50 hover:ring-neutral-300 hover:shadow-md active:bg-neutral-100 disabled:hover:bg-white disabled:hover:ring-neutral-200',
   danger:
     'bg-red-600 text-white shadow-sm hover:bg-red-700 hover:shadow-md active:bg-red-800 disabled:bg-red-300 disabled:shadow-none disabled:hover:bg-red-300',
+  dangerOutline:
+    'bg-white text-red-600 shadow-sm ring-1 ring-red-600 hover:bg-red-50 active:bg-red-100 disabled:text-red-300 disabled:ring-red-200 disabled:hover:bg-white',
   ghost:
     'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 active:bg-neutral-200 disabled:hover:bg-transparent disabled:hover:text-neutral-600',
 };
