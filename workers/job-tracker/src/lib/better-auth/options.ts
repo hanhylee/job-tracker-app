@@ -5,7 +5,7 @@ import { getAllowedOrigins } from '../cors';
 
 /**
  * Shared Better Auth options (plugins, providers, CORS origins).
- * basePath defaults to /api/auth — matches Hono mount at /api/auth/**
+ * basePath defaults to /api/auth — matches Hono mount at /api/auth/*
  */
 export function createBetterAuthOptions(
   env: Pick<
