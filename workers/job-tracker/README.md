@@ -133,15 +133,25 @@ npm run test          # both
 
 ## Deploy (Cloudflare Git)
 
-From the **repo root**, set the deploy command to:
+In **Workers & Pages → your worker → Settings → Build**, set **Path** to `/` and use one of these **Deploy command** values (must include `--env production` or Secrets Store bindings are omitted):
 
 ```bash
-npm run deploy
+cd workers/job-tracker && npx wrangler deploy --env production
 ```
 
-(Not `npx wrangler …` from root — wrangler lives in the worker workspace.)
+or:
 
-Or set the project **root directory** to `workers/job-tracker` and use `npx wrangler versions upload`.
+```bash
+cd workers/job-tracker && npm run deploy
+```
+
+**Non-production branch deploy command** (optional previews):
+
+```bash
+cd workers/job-tracker && npx wrangler versions upload --env production
+```
+
+Plain `npx wrangler deploy` without `--env production` deploys the default env (localhost URLs, no secrets) and will break auth in production.
 
 ## Scripts
 
