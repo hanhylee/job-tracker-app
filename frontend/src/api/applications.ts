@@ -17,7 +17,7 @@ type DeleteResponse = { success: true; deleted: string };
 
 export async function listApplications(): Promise<Application[]> {
   const data = await apiFetch<ListResponse>('/api/applications');
-  return data.applications;
+  return data.applications ?? [];
 }
 
 export async function getApplication(id: string): Promise<Application> {
