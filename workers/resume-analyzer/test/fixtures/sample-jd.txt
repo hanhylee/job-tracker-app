@@ -1,0 +1,11 @@
+Senior Software Engineer
+
+Requirements:
+- 5+ years experience with TypeScript and React
+- Experience building REST APIs with Node.js
+- Familiarity with PostgreSQL or SQLite
+- Strong communication skills
+
+Preferred:
+- Cloudflare Workers experience
+- Drizzle ORM

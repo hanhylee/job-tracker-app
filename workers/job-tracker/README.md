@@ -60,6 +60,11 @@ CORS and Better Auth `trustedOrigins` use `FRONTEND_URL`. If the browser origin 
 | `GET` | `/api/applications/:id/resume` | Session cookie — streams PDF |
 | `DELETE` | `/api/applications/:id/resume` | Session cookie |
 | `GET` | `/api/r2/usage` | Session cookie — monthly R2 free-tier counters |
+| `POST` | `/api/applications/:id/analyze` | Pro + session — starts ATS analysis (`202`) |
+| `GET` | `/api/applications/:id/analysis` | Pro + session — latest analysis status/result |
+| `GET` | `/api/applications/analyses/:analysisId` | Pro + session — poll by analysis id |
+
+`PATCH` accepts optional `jobDescription` (pasted JD text). Analysis requires Pro (`user.is_pro = 1`) and the **resume-analyzer** worker via service binding. See [`workers/resume-analyzer/README.md`](../resume-analyzer/README.md).
 
 ## Sign in (magic link)
 
@@ -120,10 +125,21 @@ Invoke-RestMethod -Uri "http://localhost:8787/api/auth/get-session" -Headers @{
 ```bash
 npm run test:api      # applications CRUD
 npm run test:resume   # R2 resume upload/download/delete + /api/r2/usage
-npm run test          # both
+npm run test:analysis # Pro gate, analyze preconditions; optional full E2E
+npm run test          # all of the above
 ```
 
 `test:resume` covers: PDF validation, upload/download/replace, resume delete, application delete cleanup, ownership checks, and usage counter shape. Requires R2 binding (`job-tracker-resumes` bucket) and migration `0003` applied (`npm run db:migrate:remote`).
+
+`test:analysis` requires migration `0004`, session cookie, and (for full pipeline) `user.is_pro = 1`. By default it runs Pro-gate and `400` precondition checks. For end-to-end Workers AI + queue polling:
+
+```bash
+# Terminal 1
+npm run dev:workers
+
+# Terminal 2
+ANALYSIS_E2E=1 npm run test:analysis -w job-tracker-api
+```
 
 | Error | Fix |
 |-------|-----|

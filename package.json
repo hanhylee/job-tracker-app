@@ -7,7 +7,12 @@
     "frontend"
   ],
   "scripts": {
-    "deploy": "npm run deploy -w job-tracker-api",
+    "deploy:api": "npm run deploy -w job-tracker-api",
+    "deploy:analyzer": "npm run deploy -w resume-analyzer",
+    "dev:api": "npm run dev -w job-tracker-api",
+    "dev:analyzer": "npm run dev -w resume-analyzer",
+    "dev:workers": "wrangler dev -c workers/job-tracker/wrangler.jsonc -c workers/resume-analyzer/wrangler.jsonc",
+    "test:analyzer": "npm run test -w resume-analyzer",
     "dev:web": "npm run dev -w job-tracker-web",
     "build:web": "npm run build -w job-tracker-web"
   }

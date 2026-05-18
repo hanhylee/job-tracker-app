@@ -29,6 +29,13 @@
       "when": 1779060463851,
       "tag": "0003_flaky_snowbird",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1779064860203,
+      "tag": "0004_cynical_wonder_man",
+      "breakpoints": true
     }
   ]
 }

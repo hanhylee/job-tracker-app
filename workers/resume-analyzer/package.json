@@ -1,0 +1,24 @@
+{
+  "name": "resume-analyzer",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev --ip localhost --port 8788",
+    "cf-typegen": "wrangler types",
+    "test": "tsx test/analyze.test.ts",
+    "queues:create": "wrangler queues create resume-analysis"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.12.12",
+    "unpdf": "^1.4.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.7.0",
+    "tsx": "^4.22.0",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.90.0"
+  }
+}
