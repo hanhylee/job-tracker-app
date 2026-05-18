@@ -75,7 +75,7 @@
 			],
 			// Not secrets — plain config values available instantly as strings
 			"vars": {
-				"BETTER_AUTH_URL": "https://job-tracker-app.0xhanhy.workers.dev",
+				"BETTER_AUTH_URL": "https://cancareer.com",
 				"FRONTEND_URL": "https://cancareer.com,https://www.cancareer.com"
 			},
 			"secrets_store_secrets": [
