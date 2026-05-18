@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { authClient } from '../lib/auth-client';
+import { Spinner } from './Spinner';
 
 export function ProtectedRoute() {
   const { data: session, isPending } = authClient.useSession();
@@ -7,7 +8,7 @@ export function ProtectedRoute() {
   if (isPending) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-900" />
+        <Spinner />
       </div>
     );
   }

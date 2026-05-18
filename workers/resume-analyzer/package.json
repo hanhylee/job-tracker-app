@@ -6,7 +6,7 @@
     "deploy": "wrangler deploy",
     "dev": "wrangler dev --ip localhost --port 8788",
     "cf-typegen": "wrangler types",
-    "test": "tsx test/analyze.test.ts",
+    "test": "tsx test/analyze.test.ts && tsx test/schemas.test.ts && tsx test/resume-parse.test.ts && tsx test/match.test.ts && tsx test/score.test.ts && tsx test/format-check.test.ts && tsx test/impact.test.ts && tsx test/golden.test.ts && tsx test/pipeline.test.ts",
     "queues:create": "wrangler queues create resume-analysis"
   },
   "dependencies": {

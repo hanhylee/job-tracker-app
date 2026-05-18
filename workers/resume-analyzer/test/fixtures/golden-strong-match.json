@@ -1,0 +1,67 @@
+{
+  "jdRequirements": {
+    "skills": {
+      "requiredPhrases": [
+        "React",
+        "TypeScript",
+        "Node.js"
+      ],
+      "preferredPhrases": [
+        "GraphQL"
+      ]
+    },
+    "experience": {
+      "minYears": 5,
+      "seniority": "senior",
+      "requiredPhrases": [
+        "B2B SaaS"
+      ]
+    },
+    "title": {
+      "targetPhrases": [
+        "Senior Software Engineer"
+      ]
+    }
+  },
+  "resume": {
+    "skills": [
+      "React",
+      "TypeScript",
+      "Node.js",
+      "JavaScript"
+    ],
+    "jobTitles": [
+      "Senior Software Engineer",
+      "Software Engineer"
+    ],
+    "headline": "Senior Software Engineer",
+    "totalYearsExperience": 6,
+    "seniority": "senior",
+    "bullets": [
+      {
+        "section": "Experience",
+        "text": "Built customer-facing apps with React and TypeScript, serving 50k+ users"
+      },
+      {
+        "section": "Experience",
+        "text": "Increased deployment frequency 40% while delivering B2B SaaS features"
+      }
+    ],
+    "education": [
+      "B.S. Computer Science"
+    ]
+  },
+  "resumeText": "Jane Doe jane.doe@email.com Senior Software Engineer with 6 years building B2B SaaS products. SKILLS React TypeScript Node.js EXPERIENCE Senior Software Engineer Built customer-facing apps with React and TypeScript on Node.js Delivered B2B SaaS features",
+  "expected": {
+    "skills": {
+      "score": 95
+    },
+    "experience": {
+      "score": 75
+    },
+    "titleAlignment": {
+      "score": 100
+    },
+    "overallScore": 87
+  }
+}

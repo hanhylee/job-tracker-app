@@ -26,9 +26,20 @@ export type AnalysisAction = {
   suggestion?: string;
 };
 
+export type ScoreBreakdown = {
+  skills: number;
+  experience: number;
+  titleAlignment: number;
+  weights: {
+    skills: number;
+    experience: number;
+    titleAlignment: number;
+  };
+};
+
 export type AnalysisResult = {
-  schemaVersion: 1;
   overallScore: number;
+  scoreBreakdown: ScoreBreakdown;
   categories: {
     skills: CategoryScore;
     experience: CategoryScore;
@@ -36,6 +47,14 @@ export type AnalysisResult = {
     atsFormatting: {
       score: number;
       risks: string[];
+      tips: string[];
+      wordCount?: number;
+    };
+    measurableImpact?: {
+      score: number;
+      quantifiedBullets: number;
+      totalBullets: number;
+      tips: string[];
     };
   };
   keywords: {

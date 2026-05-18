@@ -6,6 +6,7 @@ import { isProRequiredError } from '../api/analysis';
 import { validateResumeFile } from '../lib/resume-validation';
 import { downloadApplicationResume } from '../lib/download-resume';
 import { Button } from './Button';
+import { Spinner } from './Spinner';
 
 type AnalyzeFormProps = {
   application: Application;
@@ -204,8 +205,22 @@ export function AnalyzeForm({
 
       {error ? <p className="text-xs text-red-600">{error}</p> : null}
 
-      <Button type="submit" disabled={submitting || !canSubmit} className="w-full sm:w-auto">
-        {submitting ? 'Analyzing…' : 'Run analysis'}
+      <Button
+        type="submit"
+        disabled={submitting || !canSubmit}
+        className="w-full gap-2 sm:w-auto"
+      >
+        {submitting ? (
+          <>
+            <Spinner
+              className="h-4 w-4 border-neutral-500 border-t-white"
+              label="Analyzing"
+            />
+            Analyzing…
+          </>
+        ) : (
+          'Run analysis'
+        )}
       </Button>
     </form>
   );

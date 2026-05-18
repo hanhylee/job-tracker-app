@@ -60,9 +60,10 @@ export const internalRoutes = new Hono<{ Bindings: CloudflareBindings }>()
     }
 
     const jdText = normalizeText(app.jobDescription);
+    const cacheKeySuffix = ':schema:v2';
     const [resumeHash, jdHash] = await Promise.all([
-      sha256Hex(resumeText),
-      sha256Hex(jdText),
+      sha256Hex(resumeText + cacheKeySuffix),
+      sha256Hex(jdText + cacheKeySuffix),
     ]);
 
     if (!body.force) {

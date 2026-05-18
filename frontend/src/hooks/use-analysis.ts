@@ -20,6 +20,11 @@ export function useLatestAnalysis(applicationId: string | undefined) {
     queryFn: () => getLatestAnalysis(applicationId!),
     enabled: Boolean(applicationId),
     staleTime: 60_000,
+    refetchInterval: (query) => {
+      const status = query.state.data?.status;
+      if (status === 'pending' || status === 'running') return 2_000;
+      return false;
+    },
   });
 }
 

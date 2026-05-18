@@ -2,7 +2,7 @@ import { and, desc, eq } from 'drizzle-orm';
 import { applicationAnalyses, applications } from '../db/schema';
 import { getDb } from '../db/client';
 import type { CloudflareBindings } from '../types';
-import type { AnalysisResult } from './analysis-types';
+import { analysisResultSchema, type AnalysisResult } from './analysis-types';
 
 export async function loadApplicationForAnalysis(
   env: Pick<CloudflareBindings, 'db'>,
@@ -145,15 +145,17 @@ export function serializeAnalysisRow(row: {
   let result: AnalysisResult | undefined;
   if (row.resultJson) {
     try {
-      result = JSON.parse(row.resultJson) as AnalysisResult;
+      const parsed = analysisResultSchema.safeParse(JSON.parse(row.resultJson));
+      result = parsed.success ? parsed.data : undefined;
     } catch {
       result = undefined;
     }
   }
+  const overallScore = result?.overallScore ?? row.overallScore;
   return {
     analysisId: row.id,
     status: row.status,
-    overallScore: row.overallScore,
+    overallScore,
     result,
     error: row.errorMessage,
     resumeHash: row.resumeHash,
