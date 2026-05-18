@@ -1,17 +1,26 @@
+import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { uploadResume } from '../api/resume';
 import { ApplicationForm } from '../components/ApplicationForm';
+import { useToast } from '../components/ToastProvider';
 import {
+  applicationsKeys,
   useApplication,
   useCreateApplication,
   useDeleteApplication,
   useUpdateApplication,
 } from '../hooks/use-applications';
 import type { ApplicationFormValues } from '../lib/schemas';
+import { ApiError } from '../api/client';
 
 export function ApplicationPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
   const isNew = id === 'new';
+  const [pendingResumeFile, setPendingResumeFile] = useState<File | null>(null);
 
   const { data: application, isLoading, isError } = useApplication(
     isNew ? undefined : id,
@@ -30,8 +39,28 @@ export function ApplicationPage() {
     };
 
     if (isNew) {
-      await createMutation.mutateAsync(payload);
-    } else if (id) {
+      const created = await createMutation.mutateAsync(payload);
+      const file = pendingResumeFile;
+      setPendingResumeFile(null);
+      navigate('/', { replace: true });
+      if (file) {
+        uploadResume(created.id, file)
+          .then(() =>
+            queryClient.invalidateQueries({ queryKey: applicationsKeys.all }),
+          )
+          .catch((err) => {
+            const message =
+              err instanceof ApiError ? err.message : 'Upload failed';
+            showToast({
+              variant: 'error',
+              message: `Application saved, but resume upload failed: ${message}. Open the application to try again.`,
+            });
+          });
+      }
+      return;
+    }
+
+    if (id) {
       await updateMutation.mutateAsync({ id, data: payload });
     }
     navigate('/', { replace: true });
@@ -75,12 +104,28 @@ export function ApplicationPage() {
         {isNew ? 'New application' : 'Edit application'}
       </h2>
       <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-neutral-100 transition-shadow duration-200 hover:shadow-md">
-        <ApplicationForm
-          initial={application}
-          onSubmit={handleSubmit}
-          onDelete={isNew ? undefined : handleDelete}
-          submitLabel={isNew ? 'Create' : 'Save'}
-        />
+        {isNew ? (
+          <ApplicationForm
+            initial={application}
+            onSubmit={handleSubmit}
+            submitLabel="Create"
+            resumeMode="pending"
+            pendingResumeFile={pendingResumeFile}
+            onPendingResumeChange={setPendingResumeFile}
+          />
+        ) : (
+          <ApplicationForm
+            initial={application}
+            onSubmit={handleSubmit}
+            onDelete={handleDelete}
+            submitLabel="Save"
+            resumeMode="live"
+            applicationId={application!.id}
+            resumeCompany={application!.company}
+            resumeTitle={application!.title}
+            hasResume={application!.resumeUrl != null}
+          />
+        )}
       </div>
     </section>
   );

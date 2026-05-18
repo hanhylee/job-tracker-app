@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Application, ApplicationStatus } from '../types/application';
 import { APPLICATION_STATUSES } from '../types/application';
+import { ApiError } from '../api/client';
+import { downloadApplicationResume } from '../lib/download-resume';
 import { formatAppliedDate, truncateText } from '../lib/format';
 import { STATUS_SELECT_STYLES, STATUS_SHORT_LABELS } from '../lib/status-labels';
 import { useUpdateApplication } from '../hooks/use-applications';
@@ -12,7 +15,10 @@ type ApplicationRowProps = {
 
 export function ApplicationRow({ application }: ApplicationRowProps) {
   const updateMutation = useUpdateApplication();
+  const [downloadingResume, setDownloadingResume] = useState(false);
   const notesPreview = truncateText(application.notes);
+  const hasResume = application.resumeUrl != null;
+  const appliedLabel = formatAppliedDate(application.appliedAt);
   const isUpdating =
     updateMutation.isPending &&
     updateMutation.variables?.id === application.id;
@@ -20,6 +26,24 @@ export function ApplicationRow({ application }: ApplicationRowProps) {
   function handleStatusChange(next: ApplicationStatus) {
     if (next === application.status) return;
     updateMutation.mutate({ id: application.id, data: { status: next } });
+  }
+
+  async function handleResumeDownload() {
+    if (!hasResume || downloadingResume) return;
+    setDownloadingResume(true);
+    try {
+      await downloadApplicationResume(
+        application.id,
+        application.company,
+        application.title,
+      );
+    } catch (err) {
+      const message =
+        err instanceof ApiError ? err.message : 'Download failed';
+      window.alert(`Could not download resume: ${message}`);
+    } finally {
+      setDownloadingResume(false);
+    }
   }
 
   return (
@@ -61,8 +85,21 @@ export function ApplicationRow({ application }: ApplicationRowProps) {
           ))}
         </select>
       </td>
-      <td className="whitespace-nowrap py-2 px-1 text-xs tabular-nums text-neutral-500">
-        {formatAppliedDate(application.appliedAt)}
+      <td className="whitespace-nowrap py-2 px-1 text-xs tabular-nums">
+        {hasResume ? (
+          <button
+            type="button"
+            onClick={() => void handleResumeDownload()}
+            disabled={downloadingResume}
+            title="Download resume"
+            aria-label={`Download resume for ${application.company}`}
+            className="cursor-pointer text-blue-600 underline-offset-2 hover:text-blue-800 hover:underline disabled:cursor-wait disabled:opacity-60"
+          >
+            {downloadingResume ? '…' : appliedLabel}
+          </button>
+        ) : (
+          <span className="text-neutral-500">{appliedLabel}</span>
+        )}
       </td>
       <td className="max-w-0 truncate py-2 px-1 text-xs text-neutral-500">
         <span title={application.notes?.trim() || undefined}>{notesPreview}</span>
