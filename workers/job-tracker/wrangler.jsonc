@@ -25,9 +25,15 @@
 	"r2_buckets": [
 		{
 			"binding": "RESUMES",
-			"bucket_name": "job-tracker-resumes"
+			"bucket_name": "job-tracker-resumes",
+			"remote": true
 		}
 	],
+	// Fallback values for local dev — overridden by env.production.vars on deploy.
+	"vars": {
+		"BETTER_AUTH_URL": "http://localhost:8787",
+		"FRONTEND_URL": "http://localhost:5173"
+	},
 	"dev": {
 		"ip": "localhost",
 		"port": 8787
@@ -51,7 +57,8 @@
 			"r2_buckets": [
 				{
 					"binding": "RESUMES",
-					"bucket_name": "job-tracker-resumes"
+					"bucket_name": "job-tracker-resumes",
+					"remote": true
 				}
 			],
 			// Not secrets — plain config values available instantly as strings
