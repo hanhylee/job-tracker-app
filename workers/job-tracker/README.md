@@ -31,19 +31,20 @@ FRONTEND_URL=http://localhost:5173
 
 The web app lives in `frontend/` at the repo root. See [`frontend/README.md`](../../frontend/README.md).
 
-Production (Cloudflare dashboard → Worker → Settings → Variables and Secrets):
+The browser only ever calls `https://www.cancareer.com/api/*` — Vercel rewrites those to this worker server-side (see root `vercel.json`). The worker is **not** exposed to the browser directly; cookies are scoped to `www.cancareer.com` so iOS WebKit ITP doesn't block them.
 
-```env
-BETTER_AUTH_URL=https://api.cancareer.com
-FRONTEND_URL=https://cancareer.com
-# www is added automatically; list both only if you use other hosts too
+Production env (`wrangler.jsonc` → `env.production.vars`):
+
+```jsonc
+"BETTER_AUTH_URL": "https://www.cancareer.com",
+"FRONTEND_URL":    "https://cancareer.com,https://www.cancareer.com"
 ```
 
-Set the same values as **secrets** if you use Wrangler secrets. Redeploy the worker after changing them.
+**Do not** set `BETTER_AUTH_URL` to the workers.dev URL or to `api.cancareer.com` — better-auth uses this value to build OAuth callback URLs and cookie domain; it must match what the browser sees. Better-auth also uses the URL's pathname as its `basePath`, so the URL must have an empty path (or you must also change the worker mount path in `src/index.ts`).
 
-`VITE_API_URL` on Vercel must match `BETTER_AUTH_URL` (same API host).
+CORS and better-auth `trustedOrigins` are derived from `FRONTEND_URL`. The `/api/auth/*` handler in `src/index.ts` explicitly re-wraps better-auth's raw `Response` to attach CORS headers (Hono's middleware skips raw responses returned directly from handlers).
 
-CORS and Better Auth `trustedOrigins` use `FRONTEND_URL`. If the browser origin is not allowed, you will see **No Access-Control-Allow-Origin**. Cross-site cookies (`SameSite=None`) apply when `BETTER_AUTH_URL` is HTTPS.
+GitHub OAuth App callback URL: `https://www.cancareer.com/api/auth/callback/github`.
 
 ### Applications API
 

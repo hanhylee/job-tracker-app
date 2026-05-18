@@ -1,6 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/proxy/:path*", "destination": "https://api.cancareer.com/:path*" },
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
-}
