@@ -93,7 +93,7 @@ export function ApplicationRow({
             handleStatusChange(e.target.value as ApplicationStatus)
           }
           aria-label={`Status for ${application.company}`}
-          className={`h-8 w-full max-w-[6.5rem] cursor-pointer appearance-none truncate rounded-md px-2 text-sm font-medium ring-1 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30 disabled:cursor-wait disabled:opacity-60 ${STATUS_SELECT_STYLES[application.status]}`}
+          className={`h-8 w-full max-w-[6.5rem] cursor-pointer appearance-none truncate rounded-md px-2 text-sm ring-1 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30 disabled:cursor-wait disabled:opacity-60 ${STATUS_SELECT_STYLES[application.status]}`}
         >
           {APPLICATION_STATUSES.map((s) => (
             <option key={s} value={s}>
