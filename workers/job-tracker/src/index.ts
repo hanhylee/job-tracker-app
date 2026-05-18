@@ -53,7 +53,7 @@ app.onError(async (err, c) => {
   return c.json({ error: err.message }, 500);
 });
 
-app.on(["POST", "GET"], "/api/auth/*", async (c) => {
+app.all("/api/auth/*", async (c) => {
   const env = await resolveEnv(c.env);
   return auth(env).handler(c.req.raw);
 });
