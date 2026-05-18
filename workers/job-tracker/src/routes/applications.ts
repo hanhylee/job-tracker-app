@@ -40,6 +40,7 @@ export const applicationsRoutes = new Hono<{
         title: body.title,
         status: body.status ?? "applied",
         jobUrl: body.jobUrl,
+        jobDescription: body.jobDescription,
         notes: body.notes,
       })
       .returning();
@@ -165,6 +166,7 @@ export const applicationsRoutes = new Hono<{
       title?: string;
       status?: string;
       jobUrl?: string | null;
+      jobDescription?: string | null;
       notes?: string | null;
     }>();
 
@@ -177,6 +179,8 @@ export const applicationsRoutes = new Hono<{
     if (body.title !== undefined) updates.title = body.title;
     if (body.status !== undefined) updates.status = body.status;
     if (body.jobUrl !== undefined) updates.jobUrl = body.jobUrl;
+    if (body.jobDescription !== undefined)
+      updates.jobDescription = body.jobDescription;
     if (body.notes !== undefined) updates.notes = body.notes;
 
     if (Object.keys(updates).length === 1) {

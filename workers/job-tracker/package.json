@@ -12,7 +12,8 @@
     "db:migrate:remote": "wrangler d1 migrations apply db --remote",
     "test:api": "tsx test/test-api.ts",
     "test:resume": "tsx test/test-resume.ts",
-    "test": "tsx test/test-api.ts && tsx test/test-resume.ts"
+    "test:analysis": "tsx test/test-analysis.ts",
+    "test": "tsx test/test-api.ts && tsx test/test-resume.ts && tsx test/test-analysis.ts"
   },
   "dependencies": {
     "better-auth": "^1.6.10",

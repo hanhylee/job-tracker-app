@@ -14,7 +14,8 @@ export const applications = sqliteTable('applications', {
     .notNull()
     .default('applied'),
   jobUrl: text('job_url'),
-  resumeUrl: text('resume_url'), 
+  jobDescription: text('job_description'),
+  resumeUrl: text('resume_url'),
   notes: text('notes'),
   appliedAt: integer('applied_at', { mode: 'timestamp' })
     .default(sql`(strftime('%s', 'now'))`),

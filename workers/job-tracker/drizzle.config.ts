@@ -6,6 +6,7 @@ export default defineConfig({
     './src/db/auth-schema.ts',
     './src/db/application-schema.ts',
     './src/db/r2-usage-schema.ts',
+    './src/db/analysis-schema.ts',
   ],
   out: './migrations',
   dialect: 'sqlite',

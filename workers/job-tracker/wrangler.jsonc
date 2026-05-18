@@ -29,6 +29,12 @@
 			"remote": true
 		}
 	],
+	"services": [
+		{
+			"binding": "ANALYZER",
+			"service": "resume-analyzer"
+		}
+	],
 	// Fallback values for local dev — overridden by env.production.vars on deploy.
 	"vars": {
 		"BETTER_AUTH_URL": "http://localhost:8787",
@@ -59,6 +65,12 @@
 					"binding": "RESUMES",
 					"bucket_name": "job-tracker-resumes",
 					"remote": true
+				}
+			],
+			"services": [
+				{
+					"binding": "ANALYZER",
+					"service": "resume-analyzer"
 				}
 			],
 			// Not secrets — plain config values available instantly as strings

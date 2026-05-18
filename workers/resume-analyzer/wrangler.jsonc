@@ -1,0 +1,48 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "resume-analyzer",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-05-11",
+	"compatibility_flags": ["nodejs_compat"],
+	"observability": { "enabled": true },
+	"ai": {
+		"binding": "AI"
+	},
+	"d1_databases": [
+		{
+			"binding": "db",
+			"database_name": "db",
+			"database_id": "336f22e2-a1ff-4eb1-82bf-cdc9fe36c965",
+			"remote": true
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "RESUMES",
+			"bucket_name": "job-tracker-resumes",
+			"remote": true
+		}
+	],
+	"queues": {
+		"producers": [
+			{
+				"binding": "ANALYSIS_QUEUE",
+				"queue": "resume-analysis"
+			}
+		],
+		"consumers": [
+			{
+				"queue": "resume-analysis",
+				"max_batch_size": 1,
+				"max_retries": 3
+			}
+		]
+	},
+	"vars": {
+		"ANALYSIS_LLM_MODEL": "@cf/meta/llama-3.1-8b-instruct-fp8-fast"
+	},
+	"dev": {
+		"ip": "localhost",
+		"port": 8788
+	}
+}

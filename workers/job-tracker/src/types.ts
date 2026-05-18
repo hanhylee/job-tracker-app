@@ -14,6 +14,7 @@ export type EnvSecret = string | { get(): Promise<string> };
 export type CloudflareBindings = {
   db: D1Database;
   RESUMES: R2Bucket;
+  ANALYZER: Fetcher;
   BETTER_AUTH_URL: EnvSecret;
   BETTER_AUTH_SECRET: EnvSecret;
   FRONTEND_URL?: EnvSecret;

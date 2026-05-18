@@ -15,6 +15,7 @@ export type Application = {
   title: string;
   status: ApplicationStatus;
   jobUrl: string | null;
+  jobDescription: string | null;
   resumeUrl: string | null;
   notes: string | null;
   appliedAt: Date | string | number | null;
@@ -27,6 +28,7 @@ export type ApplicationInput = {
   title: string;
   status?: ApplicationStatus;
   jobUrl?: string;
+  jobDescription?: string;
   notes?: string;
 };
 

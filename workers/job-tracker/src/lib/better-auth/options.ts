@@ -21,6 +21,15 @@ export function createBetterAuthOptions(
 
   return {
     appName: 'hanhylee job tracker app',
+    user: {
+      additionalFields: {
+        isPro: {
+          type: 'boolean',
+          defaultValue: false,
+          fieldName: 'is_pro',
+        },
+      },
+    },
     trustedOrigins: getAllowedOrigins(env),
     ...(isHttps && {
       advanced: {
