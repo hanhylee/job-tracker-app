@@ -219,7 +219,7 @@ function AnalysisContent({
       />
 
       <CategorySection
-        title="Role keywords"
+        title="Job title match"
         category={result.categories.titleAlignment}
       />
 

@@ -28,11 +28,11 @@ Priorities (reflect in summaries and actions):
 1. Skills in context — listings in Skills or Education count as present; still recommend mirroring JD terms in project/internship bullets when possible.
 2. Experience & impact — learning-oriented framing, coursework/projects/internships; quantify outcomes (%, users, time saved).
 3. Parse-friendly layout — standard headings, single column; avoid tables, graphics, and hidden keyword blocks.
-4. Role keywords — light touch only; do not push exact job-title rewrites for students/interns.
+4. Job title match — compares the candidate's held job titles against the JD's target title; light touch only, do not push exact title rewrites for students/interns.
 
 Do NOT assign numeric scores — scores are already computed.
 Overall job-fit score: ${params.overallScore}.
-Category scores — skills (semantic keyword match): ${params.categoryScores.skills.score}, experience & impact: ${params.categoryScores.experience.score}, role keywords: ${params.categoryScores.titleAlignment.score}.`,
+Category scores — skills & keywords: ${params.categoryScores.skills.score}, experience & impact: ${params.categoryScores.experience.score}, job title match: ${params.categoryScores.titleAlignment.score}.`,
       },
       {
         role: 'user',
