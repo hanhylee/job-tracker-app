@@ -42,21 +42,20 @@ export function ApplicationPage() {
       const created = await createMutation.mutateAsync(payload);
       const file = pendingResumeFile;
       setPendingResumeFile(null);
-      navigate('/', { replace: true });
       if (file) {
-        uploadResume(created.id, file)
-          .then(() =>
-            queryClient.invalidateQueries({ queryKey: applicationsKeys.all }),
-          )
-          .catch((err) => {
-            const message =
-              err instanceof ApiError ? err.message : 'Upload failed';
-            showToast({
-              variant: 'error',
-              message: `Application saved, but resume upload failed: ${message}. Open the application to try again.`,
-            });
+        try {
+          await uploadResume(created.id, file);
+          await queryClient.invalidateQueries({ queryKey: applicationsKeys.all });
+        } catch (err) {
+          const message =
+            err instanceof ApiError ? err.message : 'Upload failed';
+          showToast({
+            variant: 'error',
+            message: `Application saved, but resume upload failed: ${message}. Open the application to try again.`,
           });
+        }
       }
+      navigate('/', { replace: true });
       return;
     }
 

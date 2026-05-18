@@ -38,11 +38,11 @@ app.use("*", async (c, next) => {
 
 // Ensure CORS headers appear on 500 responses (hono/cors writes ACAO after next(),
 // so an uncaught route error means ACAO is never set on the error response).
-app.onError((err, c) => {
+app.onError(async (err, c) => {
   console.error("[worker error]", err.message);
   const requestOrigin = c.req.header("origin");
   if (requestOrigin) {
-    const frontendUrl = typeof c.env.FRONTEND_URL === "string" ? c.env.FRONTEND_URL : undefined;
+    const frontendUrl = await resolveSecret(c.env.FRONTEND_URL);
     const allowed = getAllowedOrigins({ FRONTEND_URL: frontendUrl });
     if (allowed.includes(requestOrigin)) {
       c.header("Access-Control-Allow-Origin", requestOrigin);
