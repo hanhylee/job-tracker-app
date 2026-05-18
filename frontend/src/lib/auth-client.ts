@@ -4,16 +4,20 @@ import { getApiBaseUrl } from './api-base';
 
 /**
  * Resolve baseURL for better-auth. Requires an absolute URL.
- * - Absolute VITE_API_URL (e.g. https://api.example.com)  -> use as-is
- * - Path-only VITE_API_URL (e.g. /proxy)                  -> prepend window.location.origin
- * - Empty                                                 -> window.location.origin (same-origin)
+ *
+ * NOTE: better-auth uses the URL's pathname as its basePath (overriding the
+ * default `/api/auth`). When using a path prefix like `/proxy`, we MUST include
+ * `/api/auth` in the baseURL so the client constructs URLs like
+ * `/proxy/api/auth/sign-in/social` (which our Vercel rewrite then forwards to
+ * `https://api.cancareer.com/api/auth/sign-in/social`).
  */
 function resolveAuthBaseURL(): string {
   const base = getApiBaseUrl();
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   if (!base) return origin;
-  if (/^https?:\/\//i.test(base)) return base;
-  return `${origin}${base.startsWith('/') ? base : `/${base}`}`;
+  if (/^https?:\/\//i.test(base)) return `${base.replace(/\/$/, '')}/api/auth`;
+  const prefix = base.startsWith('/') ? base : `/${base}`;
+  return `${origin}${prefix}/api/auth`;
 }
 
 export const authClient = createAuthClient({
