@@ -42,9 +42,9 @@ Public proxy (job-tracker, Pro required):
 - `GET /api/applications/:id/analysis`
 - `GET /api/applications/analyses/:analysisId`
 
-## Analysis result (`schemaVersion: 1`)
+## Analysis result
 
-See `src/lib/analysis-types.ts` for the Zod schema. Response includes `overallScore`, `categories`, `keywords`, `actions`, and `meta` (model, hashes, timestamp).
+See `src/lib/analysis-types.ts` for the Zod schema. Response includes `overallScore`, `scoreBreakdown`, `categories`, `keywords`, `actions`, and `meta` (model, hashes, timestamp).
 
 ## Configuration
 

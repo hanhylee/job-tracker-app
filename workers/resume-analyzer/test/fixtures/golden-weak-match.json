@@ -1,0 +1,60 @@
+{
+  "jdRequirements": {
+    "skills": {
+      "requiredPhrases": [
+        "React",
+        "TypeScript",
+        "Node.js",
+        "GraphQL",
+        "AWS"
+      ],
+      "preferredPhrases": [
+        "Docker"
+      ]
+    },
+    "experience": {
+      "minYears": 8,
+      "seniority": "senior",
+      "requiredPhrases": [
+        "machine learning"
+      ]
+    },
+    "title": {
+      "targetPhrases": [
+        "Staff Engineer"
+      ]
+    }
+  },
+  "resume": {
+    "skills": [
+      "JavaScript",
+      "HTML"
+    ],
+    "jobTitles": [
+      "Junior Developer"
+    ],
+    "headline": null,
+    "totalYearsExperience": 2,
+    "seniority": "junior",
+    "bullets": [
+      {
+        "section": "Experience",
+        "text": "Built landing pages with HTML and CSS"
+      }
+    ],
+    "education": []
+  },
+  "resumeText": "Junior Developer with 2 years experience. Skills: JavaScript, HTML. Built landing pages.",
+  "expected": {
+    "skills": {
+      "score": 0
+    },
+    "experience": {
+      "score": 31
+    },
+    "titleAlignment": {
+      "score": 0
+    },
+    "overallScore": 12
+  }
+}

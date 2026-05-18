@@ -1,0 +1,50 @@
+{
+  "jdRequirements": {
+    "skills": {
+      "requiredPhrases": [
+        "Python"
+      ],
+      "preferredPhrases": []
+    },
+    "experience": {
+      "minYears": null,
+      "seniority": null,
+      "requiredPhrases": []
+    },
+    "title": {
+      "targetPhrases": []
+    }
+  },
+  "resume": {
+    "skills": [
+      "Python",
+      "Django"
+    ],
+    "jobTitles": [
+      "Developer"
+    ],
+    "headline": null,
+    "totalYearsExperience": 3,
+    "seniority": null,
+    "bullets": [
+      {
+        "section": "Experience",
+        "text": "Wrote Python services with Django"
+      }
+    ],
+    "education": []
+  },
+  "resumeText": "Developer with Python and Django experience.",
+  "expected": {
+    "skills": {
+      "score": 100
+    },
+    "experience": {
+      "score": 74
+    },
+    "titleAlignment": {
+      "score": 100
+    },
+    "overallScore": 90
+  }
+}

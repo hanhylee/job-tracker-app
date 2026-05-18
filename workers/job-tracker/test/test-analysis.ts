@@ -122,7 +122,7 @@ type AnalyzeStartBody = {
   status?: string;
   cached?: boolean;
   overallScore?: number;
-  result?: { schemaVersion?: number };
+  result?: { scoreBreakdown?: { weights?: Record<string, number> } };
 };
 
 async function postAnalyze(
@@ -164,7 +164,7 @@ async function testAnalyzeE2E(applicationId: string): Promise<void> {
   let final: {
     status: string;
     overallScore?: number;
-    result?: { schemaVersion?: number };
+    result?: { scoreBreakdown?: { weights?: Record<string, number> } };
     error?: string;
     analysisId?: string;
   };
@@ -197,8 +197,12 @@ async function testAnalyzeE2E(applicationId: string): Promise<void> {
     throw new Error("Expected overallScore on complete analysis");
   }
 
-  if (final.result?.schemaVersion !== 1) {
-    throw new Error("Expected result.schemaVersion === 1");
+  const breakdown = final.result?.scoreBreakdown;
+  if (!breakdown) {
+    throw new Error("Expected result.scoreBreakdown on analysis");
+  }
+  if (breakdown.weights?.skills !== 0.55) {
+    throw new Error("Expected scoreBreakdown.weights.skills === 0.55");
   }
 
   console.log(`\nE2E analysis complete. overallScore=${final.overallScore}`);

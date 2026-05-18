@@ -1,5 +1,6 @@
 {
   "name": "job-tracker-monorepo",
+  "license": "MIT",
   "private": true,
   "workspaces": [
     "workers/*",
