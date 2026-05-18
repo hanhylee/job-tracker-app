@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/proxy/:path*", "destination": "https://api.cancareer.com/:path*" },
+    { "source": "/proxy/:path*", "destination": "https://job-tracker-app.0xhanhy.workers.dev/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
