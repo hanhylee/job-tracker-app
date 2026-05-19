@@ -6,12 +6,14 @@ import { AnalyzePage } from './pages/AnalyzePage';
 import { ApplicationPage } from './pages/ApplicationPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
+import { VerifyMagicLinkPage } from './pages/VerifyMagicLinkPage';
 
 export function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/auth/verify" element={<VerifyMagicLinkPage />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<AppShell />}>
             <Route index element={<HomePage />} />

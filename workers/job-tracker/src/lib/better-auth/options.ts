@@ -40,10 +40,36 @@ export function createBetterAuthOptions(
     }),
     plugins: [
       magicLink({
-        sendMagicLink: async ({ email, url }) => {
+        sendMagicLink: async ({ email, url, token }) => {
+          // IMPORTANT: do not email the direct `/api/auth/magic-link/verify` URL.
+          // Better-auth consumes magic-link tokens atomically on first hit
+          // (GHSA-hc7v-rggr-4hvx) and corporate email link scanners — most
+          // notably Microsoft Defender Safe Links, but also Proofpoint,
+          // Mimecast, Gmail link safety, etc. — fetch every URL in inbound
+          // mail. That pre-fetch consumes the token before the user clicks,
+          // leaving us with "user is created but no session" because the
+          // Set-Cookie attaches to the scanner's connection.
+          //
+          // Instead, send a link to the SPA confirmation page `/auth/verify`,
+          // which is just static HTML. Scanners load it as harmless content;
+          // only the user's click triggers a real navigation to the verify
+          // endpoint so the session cookie lands in their browser.
+          const verifyUrl = new URL(url);
+          const callbackURL = verifyUrl.searchParams.get('callbackURL') ?? '/';
+          const confirmUrl = new URL('/auth/verify', env.BETTER_AUTH_URL);
+          confirmUrl.searchParams.set('token', token);
+          confirmUrl.searchParams.set('callbackURL', callbackURL);
+          const newUserCallbackURL = verifyUrl.searchParams.get(
+            'newUserCallbackURL',
+          );
+          if (newUserCallbackURL) {
+            confirmUrl.searchParams.set('newUserCallbackURL', newUserCallbackURL);
+          }
+          const linkUrl = confirmUrl.toString();
+
           console.log('*****************************************');
           console.log(`NEW MAGIC LINK FOR: ${email}`);
-          console.log(`URL: ${url}`);
+          console.log(`URL: ${linkUrl}`);
           console.log('*****************************************');
 
           if (env.RESEND_API_KEY) {
@@ -57,7 +83,7 @@ export function createBetterAuthOptions(
                 from: 'hello@cancareer.com',
                 to: email,
                 subject: 'Log in to Job Tracker',
-                html: `<p>Click <a href="${url}">here</a> to log in.</p>`,
+                html: `<p>Click <a href="${linkUrl}">here</a> to log in.</p>`,
               }),
             });
             if (!res.ok) {
