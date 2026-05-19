@@ -26,7 +26,6 @@ export function createBetterAuthOptions(
         isPro: {
           type: 'boolean',
           defaultValue: false,
-          fieldName: 'is_pro',
         },
       },
     },
