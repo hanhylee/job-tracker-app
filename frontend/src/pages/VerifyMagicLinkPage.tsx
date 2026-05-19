@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
-import { Button } from '../components/Button';
+import { Spinner } from '../components/Spinner';
 import { apiUrl } from '../lib/api-base';
 
 /**
@@ -12,12 +12,16 @@ import { apiUrl } from '../lib/api-base';
  * and burn the single-use token before the user clicks.
  *
  * Better-auth's magic-link tokens are consumed atomically on the first
- * verification call (hard-coded; see GHSA-hc7v-rggr-4hvx). The only safe
- * design is to require a user gesture before hitting the verify endpoint —
- * which is what this page provides via the "Sign in" button.
+ * verification call (hard-coded; see GHSA-hc7v-rggr-4hvx).
  *
- * The button uses `window.location.href` (a top-level browser navigation)
- * rather than `fetch` so the Set-Cookie from the 302 response lands in the
+ * The redirect is fired from useEffect (client-side, post-mount) rather
+ * than a <meta refresh> or server-side redirect, so HTTP-only link scanners
+ * like Microsoft Safe Links — which fetch URLs but do NOT execute
+ * JavaScript — see only inert HTML and don't follow through to the verify
+ * endpoint. A real user's browser runs the effect and is redirected.
+ *
+ * We use `window.location.href` (a top-level browser navigation) rather
+ * than `fetch` so the Set-Cookie from the 302 response lands in the
  * browser's cookie jar.
  */
 export function VerifyMagicLinkPage() {
@@ -35,29 +39,19 @@ export function VerifyMagicLinkPage() {
     return u.toString();
   }, [token, callbackURL, newUserCallbackURL]);
 
+  useEffect(() => {
+    if (verifyHref) window.location.replace(verifyHref);
+  }, [verifyHref]);
+
   if (!verifyHref) {
     return <Navigate to="/login" replace />;
   }
 
   return (
     <div className="flex min-h-dvh items-center justify-center px-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-neutral-100">
-        <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-          Sign in to CanCareer
-        </h1>
-        <p className="mt-2 text-sm text-neutral-500">
-          Click below to finish signing in. This extra step prevents email
-          scanners from invalidating your link.
-        </p>
-        <Button
-          variant="primary"
-          className="mt-6 w-full"
-          onClick={() => {
-            window.location.href = verifyHref;
-          }}
-        >
-          Sign in
-        </Button>
+      <div className="flex items-center gap-3 text-sm text-neutral-500">
+        <Spinner />
+        <span>Signing you in…</span>
       </div>
     </div>
   );
